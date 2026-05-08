@@ -500,19 +500,23 @@ function showPlanDetail(plan) {
     const titleEl = document.getElementById('pd-reason-title');
     const statEl = document.getElementById('pd-stat');
     const simEl = document.getElementById('pd-similarity');
+    const prevSimEl = document.getElementById('pd-prev-sim');
     
     if (reasonType === "고객 개인화 추천") {
         titleEl.textContent = "[설계 주제] 고객 맞춤 (유사고객)";
         statEl.innerHTML = "대장용종 병력을 가지고 있는 분들의 <strong>50.0%</strong>가 가입 중인 상품입니다.";
         simEl.textContent = "88.8%";
+        prevSimEl.textContent = "75.4%";
     } else if (reasonType === "베테랑 설계 따라하기") {
         titleEl.textContent = "[설계 주제] 우수 설계 따라하기";
         statEl.innerHTML = "우수 플래너들이 가장 많이 설계한 <strong>Top 3</strong> 구성입니다.";
         simEl.textContent = "92.5%";
+        prevSimEl.textContent = "81.2%";
     } else {
         titleEl.textContent = "[설계 주제] 최신 트렌드";
         statEl.innerHTML = "최근 3개월 지점 내 최다 판매를 기록한 <strong>인기 트렌드</strong> 상품입니다.";
         simEl.textContent = "85.2%";
+        prevSimEl.textContent = "68.9%";
     }
     
     document.getElementById('plan-detail-modal').classList.add('show');
