@@ -1412,7 +1412,7 @@ h1, h2, h3 { font-weight: 700; }
 
 /* 누적 시뮬레이션 팝업 (Sim Popup) */
 .sim-popup {
-    width: 1000px;
+    width: 850px;
     max-width: 95vw;
     padding: 0;
     border-radius: 0;
@@ -1578,7 +1578,7 @@ h1, h2, h3 { font-weight: 700; }
 }
 
 .scrollable-table {
-    max-height: 200px;
+    max-height: 150px;
     overflow-y: auto;
 }
 
