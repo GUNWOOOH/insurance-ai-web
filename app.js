@@ -493,7 +493,7 @@ function showLoadingOverlay(callback) {
             overlay.style.display = 'none';
             if(callback) callback();
         }, 300);
-    }, 3000);
+    }, 2000);
 }
 
 function resetStepper() {
