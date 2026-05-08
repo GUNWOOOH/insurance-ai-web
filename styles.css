@@ -263,6 +263,96 @@ h1, h2, h3 { font-weight: 700; }
     margin-bottom: 24px;
 }
 
+/* Grade Select */
+.grade-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.grade-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.grade-select {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font-family);
+    background: #f8f9fa;
+    cursor: pointer;
+    outline: none;
+}
+
+.grade-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(245, 130, 32, 0.15);
+}
+
+/* Type Select Modal */
+.type-select-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.btn-type {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--border-color);
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    font-family: var(--font-family);
+}
+
+.btn-type strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.btn-type small {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.btn-type .material-symbols-outlined {
+    font-size: 32px;
+}
+
+.btn-type.illness:hover {
+    border-color: #e74c3c;
+    background: #fef5f5;
+}
+
+.btn-type.illness:hover .material-symbols-outlined {
+    color: #e74c3c;
+}
+
+.btn-type.standard:hover {
+    border-color: #2d6a9f;
+    background: #f0f7ff;
+}
+
+.btn-type.standard:hover .material-symbols-outlined {
+    color: #2d6a9f;
+}
+
 .tip-text {
     color: var(--text-muted);
     font-size: 14px;

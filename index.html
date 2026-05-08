@@ -56,6 +56,14 @@
                                 <span class="material-symbols-outlined">search</span>
                             </button>
                         </div>
+                        <div class="grade-select-wrapper">
+                            <label for="grade-input" class="grade-label">급수</label>
+                            <select id="grade-input" class="grade-select">
+                                <option value="1">1급</option>
+                                <option value="2">2급</option>
+                                <option value="3">3급</option>
+                            </select>
+                        </div>
                         <div class="age-badge">보험나이 : <span class="highlight">조회 전</span></div>
                     </div>
 
@@ -285,6 +293,35 @@
             </div>
             <div class="modal-footer">
                 <button id="modal-close-btn" class="btn btn-primary">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for 유병자/표준형 Selection -->
+    <div id="type-select-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="material-symbols-outlined alert-icon" style="color: #f58220;">medical_services</span>
+                <h3>설계 유형 선택</h3>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 20px; color: #666;">가설계 고객의 설계 유형을 선택해주세요.</p>
+                <div class="type-select-buttons">
+                    <button id="type-illness-btn" class="btn btn-type illness">
+                        <span class="material-symbols-outlined">healing</span>
+                        <div>
+                            <strong>유병자</strong>
+                            <small>간편 3.10.10</small>
+                        </div>
+                    </button>
+                    <button id="type-standard-btn" class="btn btn-type standard">
+                        <span class="material-symbols-outlined">verified_user</span>
+                        <div>
+                            <strong>표준형</strong>
+                            <small>퍼펙트 플러스</small>
+                        </div>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

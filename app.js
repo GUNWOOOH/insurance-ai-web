@@ -110,6 +110,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Modal Close
     document.getElementById('modal-close-btn').addEventListener('click', hideModal);
+
+    // Type Select Modal buttons
+    document.getElementById('type-illness-btn').addEventListener('click', () => {
+        hideTypeSelectModal();
+        generatePreliminaryPlans('유병자');
+    });
+    document.getElementById('type-standard-btn').addEventListener('click', () => {
+        hideTypeSelectModal();
+        generatePreliminaryPlans('표준형');
+    });
 });
 
 function showScreen(screenNum) {
@@ -151,6 +161,7 @@ function lookupCustomer() {
         const birthStr = prelimMatch[1];
         const genderCode = prelimMatch[2];
         const gender = genderCode === '1' ? '남' : '여';
+        const grade = document.getElementById('grade-input').value;
         
         // 생년월일에서 보험나이 계산 (간이)
         const birthYear = parseInt(birthStr.substring(0, 2));
@@ -165,7 +176,8 @@ function lookupCustomer() {
             rrn: rrn,
             insurance_age: age,
             gender: gender,
-            job: "미확인",
+            grade: grade,
+            job: `미확인 / ${grade}급`,
             consent: "미동의 (가설계)",
             consent_end: "-",
             contract_summary: {
@@ -180,11 +192,9 @@ function lookupCustomer() {
                 "2순위  퍼펙트종합(10년고지)",
                 "3순위  내삶엔 3.9.9.9"
             ],
-            plans: [
-                ["AI", "고객 개인화 추천", 1, "가설계고객", "PRE-" + birthStr + "-01", "표준 2Q PASS", dateStr, "78,500", "18.2", "가심사", ""],
-                ["AI", "베테랑 설계 따라하기", 2, "가설계고객", "PRE-" + birthStr + "-02", "퍼펙트 종합(10년고지)", dateStr, "145,200", "15.7", "가심사", ""],
-                ["AI", "우리 지점 트렌드", 3, "가설계고객", "PRE-" + birthStr + "-03", "내삶엔 3.9.9.9", dateStr, "132,800", "17.1", "가심사", ""]
-            ]
+            plans: [],
+            _birthStr: birthStr,
+            _dateStr: dateStr
         };
         
         populateCustomer(currentCustomer);
@@ -237,12 +247,16 @@ function populateCustomer(customer) {
     custNameTitle.innerText = `${customer.name}  ${customer.rrn}`;
     
     // Info text
-    custInfoText.innerHTML = `
-        나이/성별 : ${customer.insurance_age}세 (${customer.gender})<br>
+    let infoHtml = `나이/성별 : ${customer.insurance_age}세 (${customer.gender})`;
+    if (customer.grade) {
+        infoHtml += ` &nbsp;|&nbsp; <strong style="color: var(--primary);">${customer.grade}급</strong>`;
+    }
+    infoHtml += `<br>
         직업정보 : ${customer.job}<br>
         개인정보 동의여부 : ${customer.consent}<br>
         동의종료일 : ${customer.consent_end}
     `;
+    custInfoText.innerHTML = infoHtml;
     
     // Summary
     summaryGrid.innerHTML = '';
@@ -288,20 +302,68 @@ function runAiDesign() {
         return;
     }
     
-    // Clear and populate plans
+    // 가설계 모드면 유형 선택 모달 표시
+    if (isPreliminary) {
+        showTypeSelectModal();
+        return;
+    }
+    
+    // 일반 고객: 바로 플랜 표시
+    renderPlans(currentCustomer.plans);
+    
+    // Update Stepper
+    document.getElementById('ai-review-step').classList.remove('active', 'highlight');
+    document.getElementById('ai-review-step').classList.add('active');
+    document.getElementById('compare-step').classList.add('active', 'highlight');
+    
+    showAlert("AI 설계 완료", `AI 원클릭 설계 결과로 ${currentCustomer.plans.length}개의 계약안이 생성되었습니다.`);
+}
+
+function generatePreliminaryPlans(type) {
+    const birthStr = currentCustomer._birthStr;
+    const dateStr = currentCustomer._dateStr;
+    let productName, plans;
+    
+    if (type === '유병자') {
+        productName = "간편 3.10.10";
+        plans = [
+            ["AI", "고객 개인화 추천", 1, "가설계고객", "PRE-" + birthStr + "-01", productName, dateStr, "85,300", "19.4", "가심사", ""],
+            ["AI", "베테랑 설계 따라하기", 2, "가설계고객", "PRE-" + birthStr + "-02", productName, dateStr, "112,600", "16.8", "가심사", ""],
+            ["AI", "우리 지점 트렌드", 3, "가설계고객", "PRE-" + birthStr + "-03", productName, dateStr, "97,400", "18.1", "가심사", ""]
+        ];
+    } else {
+        productName = "퍼펙트 플러스";
+        plans = [
+            ["AI", "고객 개인화 추천", 1, "가설계고객", "PRE-" + birthStr + "-01", productName, dateStr, "78,500", "18.2", "가심사", ""],
+            ["AI", "베테랑 설계 따라하기", 2, "가설계고객", "PRE-" + birthStr + "-02", productName, dateStr, "145,200", "15.7", "가심사", ""],
+            ["AI", "우리 지점 트렌드", 3, "가설계고객", "PRE-" + birthStr + "-03", productName, dateStr, "132,800", "17.1", "가심사", ""]
+        ];
+    }
+    
+    currentCustomer.plans = plans;
+    renderPlans(plans);
+    
+    // Update Stepper
+    document.getElementById('ai-review-step').classList.remove('active', 'highlight');
+    document.getElementById('ai-review-step').classList.add('active');
+    document.getElementById('compare-step').classList.add('active', 'highlight');
+    
+    showAlert("AI 설계 완료", `[${type}] ${productName} 기준으로\n3개의 가설계안이 생성되었습니다.`);
+}
+
+function renderPlans(plans) {
     planTbody.innerHTML = '';
-    currentCustomer.plans.forEach(plan => {
+    plans.forEach(plan => {
         const tr = document.createElement('tr');
         let html = '';
         plan.forEach((item, idx) => {
             if (idx === 9) {
-                // 심사결과 badge
                 let color = '#28a745';
                 if (item.includes('부담보') || item.includes('할증')) color = '#dc3545';
                 else if (item.includes('조정')) color = '#fd7e14';
+                else if (item.includes('가심사')) color = '#9b59b6';
                 html += `<td><span style="color: ${color}; font-weight: 600;">${item}</span></td>`;
             } else if (idx === 1) {
-                // 사유 badge
                 html += `<td><span style="background: #eef2f7; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; color: #233b69; white-space: nowrap;">${item}</span></td>`;
             } else {
                 html += `<td>${item}</td>`;
@@ -310,14 +372,14 @@ function runAiDesign() {
         tr.innerHTML = html;
         planTbody.appendChild(tr);
     });
-    
-    // Update Stepper
-    document.getElementById('ai-review-step').classList.remove('active', 'highlight');
-    document.getElementById('ai-review-step').classList.add('active');
-    document.getElementById('compare-step').classList.add('active', 'highlight');
-    
-    // Show Modal
-    showAlert("AI 설계 완료", `AI 원클릭 설계 결과로 ${currentCustomer.plans.length}개의 계약안이 생성되었습니다.`);
+}
+
+function showTypeSelectModal() {
+    document.getElementById('type-select-modal').classList.add('show');
+}
+
+function hideTypeSelectModal() {
+    document.getElementById('type-select-modal').classList.remove('show');
 }
 
 function resetStepper() {
