@@ -584,7 +584,12 @@ function hidePlanDetailModal() {
 function showAuditModal() {
     // Populate dynamic audit text from the plan detail modal's current value
     const auditText = document.getElementById('pd-audit-result').textContent;
-    document.getElementById('audit-dynamic-result').innerHTML = auditText.replace(/,/g, '<br>');
+    
+    if (auditText.trim() !== "정상") {
+        document.getElementById('audit-dynamic-result').innerHTML = "직장(2년)<br>대장(맹장, 직장 제외)(2년)<br>상, 하악골(위턱뼈-아래턱뼈)(2년)";
+    } else {
+        document.getElementById('audit-dynamic-result').innerHTML = "정상 인수 대상입니다.";
+    }
     
     document.getElementById('audit-modal').classList.add('show');
 }
