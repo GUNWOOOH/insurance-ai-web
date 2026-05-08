@@ -132,6 +132,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Plan Detail Modal close button
     document.getElementById('pd-close-btn').addEventListener('click', hidePlanDetailModal);
 
+    // Audit Modal buttons
+    document.getElementById('btn-audit-view').addEventListener('click', showAuditModal);
+    document.getElementById('audit-close-btn').addEventListener('click', hideAuditModal);
+
     // 태아보험 체크박스 토글
     const prenatalCheckbox = document.querySelector('input[value="태아보험"]');
     if (prenatalCheckbox) {
@@ -516,4 +520,16 @@ function showPlanDetail(plan) {
 
 function hidePlanDetailModal() {
     document.getElementById('plan-detail-modal').classList.remove('show');
+}
+
+function showAuditModal() {
+    // Populate dynamic audit text from the plan detail modal's current value
+    const auditText = document.getElementById('pd-audit-result').textContent;
+    document.getElementById('audit-dynamic-result').innerHTML = auditText.replace(/,/g, '<br>');
+    
+    document.getElementById('audit-modal').classList.add('show');
+}
+
+function hideAuditModal() {
+    document.getElementById('audit-modal').classList.remove('show');
 }
