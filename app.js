@@ -343,8 +343,10 @@ function runAiDesign() {
         return;
     }
     
-    // 원클릭 AI설계: 바로 플랜 표시
-    renderPlans(currentCustomer.plans);
+    // 원클릭 AI설계: 로딩 후 플랜 표시
+    showLoadingOverlay(() => {
+        renderPlans(currentCustomer.plans);
+    });
 }
 
 function generatePreliminaryPlans(type) {
@@ -369,7 +371,9 @@ function generatePreliminaryPlans(type) {
     }
     
     currentCustomer.plans = plans;
-    renderPlans(plans);
+    showLoadingOverlay(() => {
+        renderPlans(plans);
+    });
 }
 
 function renderPlans(plans) {
@@ -463,10 +467,33 @@ function submitCustomDesign() {
     currentCustomer.plans = plans;
     
     hideCustomDesignModal();
-    renderPlans(plans);
     
-    const coverageText = selectedCoverages.length > 0 ? selectedCoverages.slice(0, 3).join(', ') + (selectedCoverages.length > 3 ? ' 외 ' + (selectedCoverages.length - 3) + '건' : '') : '기본';
-    showAlert("맞춤 AI 설계 완료", `[${productName}] 기준\n보험료: ${selectedPremium}\n주요담보: ${coverageText}\n\n3개의 맞춤 설계안이 생성되었습니다.`);
+    showLoadingOverlay(() => {
+        renderPlans(plans);
+        const coverageText = selectedCoverages.length > 0 ? selectedCoverages.slice(0, 3).join(', ') + (selectedCoverages.length > 3 ? ' 외 ' + (selectedCoverages.length - 3) + '건' : '') : '기본';
+        showAlert("맞춤 AI 설계 완료", `[${productName}] 기준\n보험료: ${selectedPremium}\n주요담보: ${coverageText}\n\n3개의 맞춤 설계안이 생성되었습니다.`);
+    });
+}
+
+function showLoadingOverlay(callback) {
+    const overlay = document.getElementById('ai-loading-overlay');
+    if (!overlay) {
+        if(callback) callback();
+        return;
+    }
+    
+    overlay.style.display = 'flex';
+    setTimeout(() => {
+        overlay.classList.add('show');
+    }, 10);
+
+    setTimeout(() => {
+        overlay.classList.remove('show');
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            if(callback) callback();
+        }, 300);
+    }, 3000);
 }
 
 function resetStepper() {
