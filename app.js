@@ -120,6 +120,18 @@ document.addEventListener('DOMContentLoaded', () => {
         hideTypeSelectModal();
         generatePreliminaryPlans('표준형');
     });
+
+    // Custom Design Modal buttons
+    document.getElementById('cd-close-btn').addEventListener('click', hideCustomDesignModal);
+    document.getElementById('cd-submit-btn').addEventListener('click', submitCustomDesign);
+
+    // 태아보험 체크박스 토글
+    const prenatalCheckbox = document.querySelector('input[value="태아보험"]');
+    if (prenatalCheckbox) {
+        prenatalCheckbox.addEventListener('change', (e) => {
+            document.getElementById('prenatal-options').style.display = e.target.checked ? 'block' : 'none';
+        });
+    }
 });
 
 function showScreen(screenNum) {
@@ -307,8 +319,15 @@ function runAiDesign() {
         showTypeSelectModal();
         return;
     }
+
+    // 맞춤 AI설계 선택되었는지 확인
+    const designType = document.querySelector('input[name="design_type"]:checked');
+    if (designType && designType.value === '맞춤 AI설계') {
+        showCustomDesignModal();
+        return;
+    }
     
-    // 일반 고객: 바로 플랜 표시
+    // 원클릭 AI설계: 바로 플랜 표시
     renderPlans(currentCustomer.plans);
     
     // Update Stepper
@@ -380,6 +399,73 @@ function showTypeSelectModal() {
 
 function hideTypeSelectModal() {
     document.getElementById('type-select-modal').classList.remove('show');
+}
+
+function showCustomDesignModal() {
+    // 인기담보 라벨 업데이트
+    if (currentCustomer) {
+        const ageGroup = Math.floor(currentCustomer.insurance_age / 10) * 10;
+        const label = document.getElementById('popular-label');
+        label.textContent = `★ '${ageGroup}대 ${currentCustomer.gender}' 고객의 상위10개 질병담보`;
+    }
+    document.getElementById('custom-design-modal').classList.add('show');
+}
+
+function hideCustomDesignModal() {
+    document.getElementById('custom-design-modal').classList.remove('show');
+}
+
+function submitCustomDesign() {
+    // 선택된 상품 수집
+    const selectedProducts = Array.from(document.querySelectorAll('input[name="product"]:checked')).map(c => c.value);
+    const selectedCoverages = Array.from(document.querySelectorAll('input[name="coverage"]:checked')).map(c => c.value);
+    const selectedPremium = document.querySelector('input[name="premium"]:checked')?.value || '헬퍼추천';
+    
+    if (selectedProducts.length === 0) {
+        hideCustomDesignModal();
+        showAlert("안내", "상품 구분을 1개 이상 선택해주세요.");
+        return;
+    }
+    
+    // 상품명 결정
+    let productName = "맞춤 종합플랜";
+    if (selectedProducts.includes('종합보험_유병자')) {
+        productName = "맞춤 간편플랜";
+    } else if (selectedProducts.includes('운전자보험')) {
+        productName = "맞춤 운전자플랜";
+    } else if (selectedProducts.includes('간병치매보험')) {
+        productName = "맞춤 간병플랜";
+    }
+    
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    const custName = currentCustomer.name;
+    
+    // 보험료 범위에 따른 금액 결정
+    let premiums = ["95,400", "128,700", "156,200"];
+    if (selectedPremium === '5만원이하') premiums = ["42,300", "38,100", "47,800"];
+    else if (selectedPremium === '5~10만원') premiums = ["72,400", "85,600", "93,100"];
+    else if (selectedPremium === '10~15만원') premiums = ["108,500", "125,300", "142,800"];
+    else if (selectedPremium === '15만원초과') premiums = ["168,900", "185,200", "201,700"];
+    
+    const plans = [
+        ["AI", "고객 개인화 추천", 1, custName, "CUSTOM-" + dateStr.replace(/-/g,'') + "-01", productName, dateStr, premiums[0], "17.5", "정상", ""],
+        ["AI", "베테랑 설계 따라하기", 2, custName, "CUSTOM-" + dateStr.replace(/-/g,'') + "-02", productName, dateStr, premiums[1], "15.2", "정상", ""],
+        ["AI", "우리 지점 트렌드", 3, custName, "CUSTOM-" + dateStr.replace(/-/g,'') + "-03", productName, dateStr, premiums[2], "13.8", "정상", ""]
+    ];
+    
+    currentCustomer.plans = plans;
+    
+    hideCustomDesignModal();
+    renderPlans(plans);
+    
+    // Update Stepper
+    document.getElementById('ai-review-step').classList.remove('active', 'highlight');
+    document.getElementById('ai-review-step').classList.add('active');
+    document.getElementById('compare-step').classList.add('active', 'highlight');
+    
+    const coverageText = selectedCoverages.length > 0 ? selectedCoverages.slice(0, 3).join(', ') + (selectedCoverages.length > 3 ? ' 외 ' + (selectedCoverages.length - 3) + '건' : '') : '기본';
+    showAlert("맞춤 AI 설계 완료", `[${productName}] 기준\n보험료: ${selectedPremium}\n주요담보: ${coverageText}\n\n3개의 맞춤 설계안이 생성되었습니다.`);
 }
 
 function resetStepper() {

@@ -281,6 +281,103 @@
         </section>
     </main>
 
+    <!-- 맞춤 AI설계 조건 선택 팝업 -->
+    <div id="custom-design-modal" class="modal">
+        <div class="modal-content custom-design-popup">
+            <div class="custom-design-header">
+                <h2>맞춤AI설계 — 설계 조건을 선택하세요 <span class="header-sub">(선택하신 조건을 반영해서 설계합니다)</span></h2>
+            </div>
+            <div class="custom-design-body">
+                <!-- 상품 구분 -->
+                <div class="cd-column">
+                    <div class="cd-section-title">상품 구분</div>
+                    <div class="cd-section-body">
+                        <label class="cd-check"><input type="checkbox" name="product" value="종합보험_표준체" checked> <strong>[ 종합보험 ] 표준체</strong></label>
+                        <label class="cd-check"><input type="checkbox" name="product" value="종합보험_유병자"> [ 종합보험 ] 유병자</label>
+                        <label class="cd-check"><input type="checkbox" name="product" value="운전자보험"> 운전자보험</label>
+                        <label class="cd-check"><input type="checkbox" name="product" value="간병치매보험"> 간병/치매보험</label>
+                        <label class="cd-check"><input type="checkbox" name="product" value="치아보험"> 치아보험</label>
+                        <label class="cd-check"><input type="checkbox" name="product" value="태아보험"> 태아보험</label>
+                        <div class="cd-sub-group" id="prenatal-options" style="display:none;">
+                            <label class="cd-radio"><input type="radio" name="prenatal_type" value="단태아" checked> 단태아</label>
+                            <label class="cd-radio"><input type="radio" name="prenatal_type" value="다태아"> 다태아</label>
+                            <div class="cd-mini-form">
+                                <label>태명 <input type="text" class="cd-mini-input" placeholder="태명"></label>
+                                <label>출생예정일 <input type="date" class="cd-mini-input"></label>
+                            </div>
+                        </div>
+
+                        <div class="cd-section-title" style="margin-top: 20px;">보험료</div>
+                        <label class="cd-radio"><input type="radio" name="premium" value="헬퍼추천" checked> <strong>헬퍼 추천</strong></label>
+                        <label class="cd-radio"><input type="radio" name="premium" value="5만원이하"> 5만원 이하</label>
+                        <label class="cd-radio"><input type="radio" name="premium" value="5~10만원"> 5~10만원</label>
+                        <label class="cd-radio"><input type="radio" name="premium" value="10~15만원"> 10~15만원</label>
+                        <label class="cd-radio"><input type="radio" name="premium" value="15만원초과"> 15만원 초과</label>
+                    </div>
+                </div>
+
+                <!-- 주요담보 선택 -->
+                <div class="cd-column cd-column-mid">
+                    <div class="cd-section-title">주요담보 선택</div>
+                    <div class="cd-section-body cd-scrollable">
+                        <label class="cd-check highlight-check"><input type="checkbox" name="coverage" value="헬퍼추천" checked> <strong>헬퍼 추천</strong></label>
+
+                        <div class="cd-group-label">■ 암</div>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="암진단비"> 암진단비</label>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="통합암진단비"> 통합암진단비</label>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="암수술비"> 암수술비</label>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="암주요치료비"> 암주요치료비</label>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="고액항암치료비"> 고액항암치료비</label>
+
+                        <div class="cd-group-label">■ 뇌혈관/심혈관</div>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="뇌혈관질환진단비"> 뇌혈관질환진단비</label>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="심혈관질환진단비"> 심혈관질환진단비</label>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="심뇌혈관수술비"> 심뇌혈관 수술비</label>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="심뇌혈관주요치료비"> 심뇌혈관 주요치료비</label>
+
+                        <div class="cd-group-label">■ 간병인일당</div>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="상해간병사용입원일당"> 상해간병사용입원일당</label>
+                        <label class="cd-check"><input type="checkbox" name="coverage" value="질병간병사용입원일당"> 질병간병사용입원일당</label>
+                    </div>
+                </div>
+
+                <!-- 판매 인기담보 TOP 10 -->
+                <div class="cd-column">
+                    <div class="cd-section-title accent-title">판매 인기담보 TOP 10</div>
+                    <div class="cd-section-body">
+                        <p class="cd-star-label" id="popular-label">★ '30대 남자' 고객의 상위10개 질병담보</p>
+                        <div class="cd-popular-list">
+                            <div class="cd-popular-item"><span>1. 질병수술</span><input type="checkbox" name="popular" value="질병수술"></div>
+                            <div class="cd-popular-item"><span>2. 질병입원</span><input type="checkbox" name="popular" value="질병입원"></div>
+                            <div class="cd-popular-item"><span>3. 혈전제거치료비</span><input type="checkbox" name="popular" value="혈전제거치료비"></div>
+                            <div class="cd-popular-item"><span>4. 혈전주요치료비</span><input type="checkbox" name="popular" value="혈전주요치료비"></div>
+                            <div class="cd-popular-item"><span>5. 남성통합암</span><input type="checkbox" name="popular" value="남성통합암"></div>
+                            <div class="cd-popular-item"><span>6. 간병인사용</span><input type="checkbox" name="popular" value="간병인사용"></div>
+                            <div class="cd-popular-item"><span>7. 로봇갑수술</span><input type="checkbox" name="popular" value="로봇갑수술"></div>
+                            <div class="cd-popular-item"><span>8. 심뇌생활비</span><input type="checkbox" name="popular" value="심뇌생활비"></div>
+                            <div class="cd-popular-item"><span>9. 하이클래스암특정</span><input type="checkbox" name="popular" value="하이클래스암특정"></div>
+                            <div class="cd-popular-item"><span>10. 중입자치료비</span><input type="checkbox" name="popular" value="중입자치료비"></div>
+                        </div>
+                        <div class="cd-bottom-options">
+                            <div class="cd-option-row">
+                                <div class="cd-option-box accent-box">만기</div>
+                                <select class="cd-select"><option>연만기</option><option>80세만기</option><option>90세만기</option><option>100세만기</option></select>
+                            </div>
+                            <div class="cd-option-row">
+                                <div class="cd-option-box">해약환급금</div>
+                                <select class="cd-select"><option>무저해지</option><option>표준해지</option><option>저해지</option></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-design-footer">
+                <button id="cd-submit-btn" class="btn btn-primary">진행</button>
+                <button id="cd-close-btn" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal for Alerts -->
     <div id="alert-modal" class="modal">
         <div class="modal-content">
