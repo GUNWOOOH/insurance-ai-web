@@ -477,6 +477,16 @@ function submitCustomDesign() {
 
 function showLoadingOverlay(callback) {
     const overlay = document.getElementById('ai-loading-overlay');
+    
+    // Stepper logic - Start (설계 중)
+    const s1 = document.getElementById('step-1');
+    const s2 = document.getElementById('step-2');
+    const s3 = document.getElementById('step-3');
+    
+    if (s1) s1.className = 'step active';
+    if (s2) s2.className = 'step active highlight';
+    if (s3) s3.className = 'step';
+
     if (!overlay) {
         if(callback) callback();
         return;
@@ -489,6 +499,11 @@ function showLoadingOverlay(callback) {
 
     setTimeout(() => {
         overlay.classList.remove('show');
+        
+        // Stepper logic - Complete (설계 완료)
+        if (s2) s2.className = 'step active';
+        if (s3) s3.className = 'step active highlight';
+
         setTimeout(() => {
             overlay.style.display = 'none';
             if(callback) callback();
