@@ -345,11 +345,6 @@ function runAiDesign() {
     
     // 원클릭 AI설계: 바로 플랜 표시
     renderPlans(currentCustomer.plans);
-    
-    // Update Stepper
-    document.getElementById('ai-review-step').classList.remove('active', 'highlight');
-    document.getElementById('ai-review-step').classList.add('active');
-    document.getElementById('compare-step').classList.add('active', 'highlight');
 }
 
 function generatePreliminaryPlans(type) {
@@ -375,11 +370,6 @@ function generatePreliminaryPlans(type) {
     
     currentCustomer.plans = plans;
     renderPlans(plans);
-    
-    // Update Stepper
-    document.getElementById('ai-review-step').classList.remove('active', 'highlight');
-    document.getElementById('ai-review-step').classList.add('active');
-    document.getElementById('compare-step').classList.add('active', 'highlight');
 }
 
 function renderPlans(plans) {
@@ -474,11 +464,6 @@ function submitCustomDesign() {
     
     hideCustomDesignModal();
     renderPlans(plans);
-    
-    // Update Stepper
-    document.getElementById('ai-review-step').classList.remove('active', 'highlight');
-    document.getElementById('ai-review-step').classList.add('active');
-    document.getElementById('compare-step').classList.add('active', 'highlight');
     
     const coverageText = selectedCoverages.length > 0 ? selectedCoverages.slice(0, 3).join(', ') + (selectedCoverages.length > 3 ? ' 외 ' + (selectedCoverages.length - 3) + '건' : '') : '기본';
     showAlert("맞춤 AI 설계 완료", `[${productName}] 기준\n보험료: ${selectedPremium}\n주요담보: ${coverageText}\n\n3개의 맞춤 설계안이 생성되었습니다.`);
