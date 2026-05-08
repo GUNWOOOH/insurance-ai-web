@@ -136,6 +136,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-audit-view').addEventListener('click', showAuditModal);
     document.getElementById('audit-close-btn').addEventListener('click', hideAuditModal);
 
+    // Sim Modal buttons
+    document.getElementById('btn-sim-view').addEventListener('click', showSimModal);
+    document.getElementById('sim-close-x').addEventListener('click', hideSimModal);
+    document.getElementById('sim-close-btn').addEventListener('click', hideSimModal);
+
     // 태아보험 라디오 토글
     const productRadios = document.querySelectorAll('input[name="product"]');
     productRadios.forEach(radio => {
@@ -563,4 +568,25 @@ function showAuditModal() {
 
 function hideAuditModal() {
     document.getElementById('audit-modal').classList.remove('show');
+}
+
+function showSimModal() {
+    // Populate dynamic values from the plan detail modal or current customer
+    const planId = document.getElementById('pd-plan-id').textContent;
+    const productName = document.getElementById('pd-product-name').textContent;
+    const custName = currentCustomer ? currentCustomer.name : '고객명';
+
+    document.getElementById('sim-cust-name').value = custName;
+    document.getElementById('sim-plan-id').textContent = planId;
+    document.getElementById('sim-product-name').textContent = productName;
+    
+    document.querySelectorAll('.sim-plan-id-display').forEach(el => {
+        el.textContent = planId.substring(0, 10) + '...';
+    });
+
+    document.getElementById('sim-modal').classList.add('show');
+}
+
+function hideSimModal() {
+    document.getElementById('sim-modal').classList.remove('show');
 }

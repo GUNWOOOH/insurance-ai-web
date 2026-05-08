@@ -405,7 +405,7 @@
 
             <div class="plan-detail-footer">
                 <button class="btn btn-outline">플랜 비교하기</button>
-                <button class="btn btn-primary" style="background: #f58220; border-color: #f58220;">누적시뮬레이션</button>
+                <button id="btn-sim-view" class="btn btn-primary" style="background: #f58220; border-color: #f58220;">누적시뮬레이션</button>
                 <button id="btn-audit-view" class="btn btn-primary" style="background: #e65c00; border-color: #e65c00;">인수심사보기</button>
                 <button id="pd-close-btn" class="btn btn-secondary" style="background: white; color: #333; border: 1px solid #ccc;">닫기</button>
             </div>
@@ -490,6 +490,194 @@
                             <p id="audit-dynamic-result">직장(2년)<br>대장(맹장, 직장 제외)(2년)<br>상,하악골(위턱뼈-아래턱뼈)(2년)</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 누적 시뮬레이션 팝업 -->
+    <div id="sim-modal" class="modal">
+        <div class="modal-content sim-popup">
+            <div class="sim-header">
+                <div class="sim-header-left">
+                    <span class="material-symbols-outlined" style="font-size: 16px; margin-right: 6px; color: #d66b15;">analytics</span>
+                    바로추적/조정(LTUJ0037U)_접속사번 : (313059 / 진수진)
+                </div>
+                <div class="sim-header-right">
+                    <span>─</span>
+                    <span>□</span>
+                    <button id="sim-close-x" class="sim-close-x">&times;</button>
+                </div>
+            </div>
+            
+            <div class="sim-body">
+                <div class="sim-search-bar">
+                    <span class="sim-label">피보험자</span>
+                    <div class="sim-input-wrap">
+                        <input type="text" value="800612-1080911" readonly>
+                        <button class="sim-icon-btn"><span class="material-symbols-outlined" style="font-size: 14px;">search</span></button>
+                    </div>
+                    <span class="sim-label" style="margin-left: 20px;">피보험자명</span>
+                    <input type="text" id="sim-cust-name" value="박세환" class="sim-input-name" readonly>
+                </div>
+
+                <div class="sim-section">
+                    <div class="sim-section-header">
+                        <span class="sim-section-title">▶ 가입계약 현황(설계건 포함)</span>
+                        <div class="sim-right-text">전체 <span>3</span> 건중 <span>3</span> 건 선택</div>
+                    </div>
+                    <table class="sim-table">
+                        <thead>
+                            <tr>
+                                <th width="30">☑</th>
+                                <th width="60">상태</th>
+                                <th width="120">계약번호</th>
+                                <th width="100">관계</th>
+                                <th width="160">보험기간</th>
+                                <th>상품명</th>
+                                <th width="40">급수</th>
+                                <th width="180">직업명</th>
+                                <th width="70">직업코드</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>☑</td>
+                                <td>설계중</td>
+                                <td id="sim-plan-id">L02617597141</td>
+                                <td>주피보험자임</td>
+                                <td>2026-05-08~2080-05-08</td>
+                                <td id="sim-product-name" class="text-left">간편한3.10.10건강보험(세만기형)</td>
+                                <td>3</td>
+                                <td>간판 제작 및 설치원(실외설치)</td>
+                                <td>73041</td>
+                            </tr>
+                            <tr>
+                                <td>☑</td>
+                                <td>유지</td>
+                                <td>L02617598873</td>
+                                <td>주피보험자임</td>
+                                <td>2026-05-08~2046-05-08</td>
+                                <td class="text-left">뉴하이카운전자상해보험(HI2601)</td>
+                                <td>3</td>
+                                <td>간판 제작 및 설치원(실외설치)</td>
+                                <td>73041</td>
+                            </tr>
+                            <tr>
+                                <td>☑</td>
+                                <td>유지</td>
+                                <td>L02613999641</td>
+                                <td>주피보험자임</td>
+                                <td>2026-04-13~2031-04-13</td>
+                                <td class="text-left">성공마스터재산종합보험(HI2601)1종...</td>
+                                <td>3</td>
+                                <td>간판 제작 및 설치원(실외설치)</td>
+                                <td>73041</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="sim-tabs">
+                        <div class="sim-tab active">특인내역</div>
+                        <div class="sim-tab">누적지침룰</div>
+                        <div class="sim-tab">실손지침룰</div>
+                        <div class="sim-tab">정액지침룰</div>
+                    </div>
+                </div>
+
+                <div class="sim-section" style="margin-top: 10px;">
+                    <div class="sim-section-header">
+                        <span class="sim-section-title">▶ 특인내역 조회 <span class="sim-sub-info">[인수지침 해소 대상건수 : 당사 <span class="sim-yellow-badge">12</span> 건, 당/타사 <span class="sim-yellow-badge">0</span> 건]</span></span>
+                        <div class="sim-right-buttons">
+                            <button class="sim-btn">선택 누적계산</button>
+                            <button class="sim-btn sim-btn-orange">전체 누적계산</button>
+                        </div>
+                    </div>
+                    
+                    <div class="sim-table-wrap">
+                        <table class="sim-table">
+                            <thead>
+                                <tr>
+                                    <th>인수지침</th>
+                                    <th>누적구분명</th>
+                                    <th width="100">계약번호</th>
+                                    <th width="50">상태</th>
+                                    <th>가입담보</th>
+                                    <th width="80">반영금액</th>
+                                    <th width="80">한도금액</th>
+                                    <th width="80">가능금액</th>
+                                    <th width="100">수정금액</th>
+                                    <th width="60">자동조정</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="sim-group-title">
+                                    <td colspan="10" class="text-left"><strong>1.[리스크제한자 I (위험직업군)] [누적한도][당사] 교통(운행중)상해경도후유장해 총 보유금액 : 10,000만원, 누적...</strong></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">교통(운행중)상해경도후유장해(0...</td>
+                                    <td><span class="sim-plan-id-display">L0261759...</span></td>
+                                    <td>설계중</td>
+                                    <td class="text-left">상해후유장해(간편건강고지)담보 (3NB4)</td>
+                                    <td>20,000,000</td>
+                                    <td rowspan="2">20,000,000</td>
+                                    <td rowspan="2">0</td>
+                                    <td><input type="text" class="sim-grid-input" value="20,000,000"></td>
+                                    <td><button class="sim-icon-btn"><span class="material-symbols-outlined" style="font-size: 14px;">edit</span></button></td>
+                                </tr>
+                                <tr>
+                                    <td>L0261759...</td>
+                                    <td>유지</td>
+                                    <td class="text-left">상해후유장해담보 (4381)</td>
+                                    <td>80,000,000</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                <tr class="sim-group-title">
+                                    <td colspan="10" class="text-left"><strong>2.[리스크제한자 I (위험직업군)] [누적한도][당사] 화재상해경도후유장해 총 보유금액 : 10,000만원, 누적...</strong></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">화재상해경도후유장해(017)</td>
+                                    <td><span class="sim-plan-id-display">L0261759...</span></td>
+                                    <td>설계중</td>
+                                    <td class="text-left">상해후유장해(간편건강고지)담보 (3NB4)</td>
+                                    <td>20,000,000</td>
+                                    <td rowspan="2">20,000,000</td>
+                                    <td rowspan="2">0</td>
+                                    <td><input type="text" class="sim-grid-input" value="20,000,000"></td>
+                                    <td><button class="sim-icon-btn"><span class="material-symbols-outlined" style="font-size: 14px;">edit</span></button></td>
+                                </tr>
+                                <tr>
+                                    <td>L0261759...</td>
+                                    <td>유지</td>
+                                    <td class="text-left">상해후유장해담보 (4381)</td>
+                                    <td>80,000,000</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="sim-footer-notes">
+                    <p>• 당사 유지계약에 대한 선택계산 및 당일변경분은 <span style="color: #d32f2f;">당타사 누적 추적에 반영되지 않습니다.</span></p>
+                    <p>• 일괄조정/자동조정의 기준은 담보별 CV배수 기준, 높은순부터 가입됩니다.</p>
+                    <p>• 일괄조정/자동조정으로 인하여 가입담보가 <span>배제</span> 될 수 있습니다. <span style="color: #d32f2f;">기본담보 및 필수담보는 0원으로 저장하실 수 없습니다.</span></p>
+                    <p>• 담보별로 <span style="color: #d32f2f;">마지막 수정하신 금액 기준</span> 으로 적용되오니, 가입설계에 참고하시기 바랍니다.</p>
+                </div>
+            </div>
+
+            <div class="sim-footer">
+                <div class="sim-footer-left">
+                    <button class="sim-btn">계약조회</button>
+                    <button class="sim-btn">담보조회</button>
+                    <button class="sim-btn">정액계약상세조회</button>
+                </div>
+                <div class="sim-footer-right">
+                    <button class="sim-btn sim-btn-red">일괄조정</button>
+                    <button class="sim-btn sim-btn-red">저장후닫기</button>
+                    <button id="sim-close-btn" class="sim-btn">X 닫기</button>
                 </div>
             </div>
         </div>
