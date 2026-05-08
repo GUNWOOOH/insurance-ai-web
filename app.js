@@ -448,6 +448,8 @@ function submitCustomDesign() {
         productName = "맞춤 운전자플랜";
     } else if (selectedProducts.includes('간병치매보험')) {
         productName = "맞춤 간병플랜";
+    } else if (selectedProducts.includes('태아보험')) {
+        productName = "어린이Q";
     }
     
     const today = new Date();
@@ -501,22 +503,47 @@ function showPlanDetail(plan) {
     const statEl = document.getElementById('pd-stat');
     const simEl = document.getElementById('pd-similarity');
     const prevSimEl = document.getElementById('pd-prev-sim');
+    const descEl = document.querySelector('.pd-desc');
     
-    if (reasonType === "고객 개인화 추천") {
-        titleEl.textContent = "[설계 주제] 고객 맞춤 (유사고객)";
-        statEl.innerHTML = "대장용종 병력을 가지고 있는 분들의 <strong>50.0%</strong>가 가입 중인 상품입니다.";
-        simEl.textContent = "88.8%";
-        prevSimEl.textContent = "75.4%";
-    } else if (reasonType === "베테랑 설계 따라하기") {
-        titleEl.textContent = "[설계 주제] 우수 설계 따라하기";
-        statEl.innerHTML = "우수 플래너들이 가장 많이 설계한 <strong>Top 3</strong> 구성입니다.";
-        simEl.textContent = "92.5%";
-        prevSimEl.textContent = "81.2%";
+    // 태아보험/어린이보험 분기 처리
+    const isPrenatal = plan[5].includes('어린이');
+
+    if (isPrenatal) {
+        document.getElementById('pd-sim-wrapper').style.display = 'none';
+        document.getElementById('pd-prev-sim-wrapper').style.display = 'none';
+        descEl.textContent = "고객님과 동일한 유형의 고객들이 가장 선호하는 표준 플랜 구성입니다.";
+        
+        if (reasonType === "고객 개인화 추천") {
+            titleEl.textContent = "[설계 주제] 자사 최다 가입 표준 플랜";
+            statEl.innerHTML = "당사 태아보험 가입 고객들이 <strong>가장 많이 선택하는</strong> 기본 표준 플랜입니다.";
+        } else if (reasonType === "베테랑 설계 따라하기") {
+            titleEl.textContent = "[설계 주제] 표준 플랜 + 우수 설계자 옵션";
+            statEl.innerHTML = "표준 플랜에 <strong>우수 설계자들의 추천 특약</strong>이 추가된 든든한 구성입니다.";
+        } else {
+            titleEl.textContent = "[설계 주제] 표준 플랜 + 지점 인기 옵션";
+            statEl.innerHTML = "표준 플랜에 최근 3개월 지점 내 <strong>가장 인기 있는 옵션</strong>이 추가된 구성입니다.";
+        }
     } else {
-        titleEl.textContent = "[설계 주제] 최신 트렌드";
-        statEl.innerHTML = "최근 3개월 지점 내 최다 판매를 기록한 <strong>인기 트렌드</strong> 상품입니다.";
-        simEl.textContent = "85.2%";
-        prevSimEl.textContent = "68.9%";
+        document.getElementById('pd-sim-wrapper').style.display = 'block';
+        document.getElementById('pd-prev-sim-wrapper').style.display = 'block';
+        descEl.textContent = "고객님의 가입정보를 기반 중 암/뇌/심 중증질환 기왕력 및 다빈도질환 이력이 비슷한 고객님들이 많이 가입한 상품 중 보장 자산이 많이 담긴 설계를 추천 드립니다.";
+
+        if (reasonType === "고객 개인화 추천") {
+            titleEl.textContent = "[설계 주제] 고객 맞춤 (유사고객)";
+            statEl.innerHTML = "대장용종 병력을 가지고 있는 분들의 <strong>50.0%</strong>가 가입 중인 상품입니다.";
+            simEl.textContent = "88.8%";
+            prevSimEl.textContent = "75.4%";
+        } else if (reasonType === "베테랑 설계 따라하기") {
+            titleEl.textContent = "[설계 주제] 우수 설계 따라하기";
+            statEl.innerHTML = "우수 플래너들이 가장 많이 설계한 <strong>Top 3</strong> 구성입니다.";
+            simEl.textContent = "92.5%";
+            prevSimEl.textContent = "81.2%";
+        } else {
+            titleEl.textContent = "[설계 주제] 최신 트렌드";
+            statEl.innerHTML = "최근 3개월 지점 내 최다 판매를 기록한 <strong>인기 트렌드</strong> 상품입니다.";
+            simEl.textContent = "85.2%";
+            prevSimEl.textContent = "68.9%";
+        }
     }
     
     document.getElementById('plan-detail-modal').classList.add('show');
