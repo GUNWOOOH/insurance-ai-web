@@ -1414,6 +1414,9 @@ h1, h2, h3 { font-weight: 700; }
 .sim-popup {
     width: 850px;
     max-width: 95vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     padding: 0;
     border-radius: 0;
     border: 1px solid #999;
@@ -1454,6 +1457,8 @@ h1, h2, h3 { font-weight: 700; }
 
 .sim-body {
     padding: 6px;
+    overflow-y: auto;
+    flex-grow: 1;
 }
 
 .sim-search-bar {
@@ -1578,7 +1583,7 @@ h1, h2, h3 { font-weight: 700; }
 }
 
 .scrollable-table {
-    max-height: 150px;
+    max-height: 120px;
     overflow-y: auto;
 }
 
