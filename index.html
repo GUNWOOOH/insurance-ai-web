@@ -67,7 +67,7 @@
                             조회하기
                         </button>
                     </div>
-                    <p class="tip-text">샘플 주민등록번호: 900101-1234567 또는 900101-1000000</p>
+                    <p class="tip-text">동의고객: 900101-1234567 또는 900101-1000000 &nbsp;|&nbsp; 가설계: 생년월일6자리-성별(1 또는 2) 예) 900101-1</p>
                 </div>
 
                 <!-- Sidebar Area -->
@@ -147,8 +147,8 @@
                             <input type="radio" name="design_type" value="원클릭AI설계(종합보험)" checked>
                             <span class="radio-label">원클릭AI설계 (종합보험)</span>
                         </label>
-                        <label class="radio-option">
-                            <input type="radio" name="design_type" value="맞춤 AI설계">
+                        <label class="radio-option" id="custom-ai-option">
+                            <input type="radio" name="design_type" value="맞춤 AI설계" id="custom-ai-radio">
                             <span class="radio-label">맞춤 AI설계</span>
                         </label>
                         <button id="run-ai-btn" class="btn btn-ai pulse-glow mt-auto">

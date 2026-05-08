@@ -573,6 +573,12 @@ h1, h2, h3 { font-weight: 700; }
     font-size: 15px;
 }
 
+.radio-option.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    text-decoration: line-through;
+}
+
 .gradient-border {
     position: relative;
 }

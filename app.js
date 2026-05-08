@@ -71,6 +71,7 @@ const CUSTOMERS = {
 };
 
 let currentCustomer = null;
+let isPreliminary = false; // 가설계 모드 여부
 
 // DOM Elements
 const screen1 = document.getElementById('screen1');
@@ -140,16 +141,95 @@ function hideModal() {
 
 function lookupCustomer() {
     const rrn = rrnInput.value.trim();
-    const customer = CUSTOMERS[rrn];
     
-    if (!customer) {
-        showAlert("조회 결과", "샘플 데이터가 없습니다.\n900101-1234567 또는 900101-1000000 으로 테스트하세요.");
+    // 가설계 판별: "900101-1" 또는 "9001011" 형태 (6자리 생년월일 + 성별 1자리)
+    const prelimMatch = rrn.match(/^(\d{6})-?([12])$/);
+    
+    if (prelimMatch) {
+        // 가설계 모드
+        isPreliminary = true;
+        const birthStr = prelimMatch[1];
+        const genderCode = prelimMatch[2];
+        const gender = genderCode === '1' ? '남' : '여';
+        
+        // 생년월일에서 보험나이 계산 (간이)
+        const birthYear = parseInt(birthStr.substring(0, 2));
+        const fullYear = birthYear >= 50 ? 1900 + birthYear : 2000 + birthYear;
+        const age = new Date().getFullYear() - fullYear;
+        
+        const today = new Date();
+        const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+        
+        currentCustomer = {
+            name: "가설계고객",
+            rrn: rrn,
+            insurance_age: age,
+            gender: gender,
+            job: "미확인",
+            consent: "미동의 (가설계)",
+            consent_end: "-",
+            contract_summary: {
+                "현대해상": ["- 건", "- 원"],
+                "손해보험": ["- 건", "- 원"],
+                "생명보험": ["- 건", "- 원"],
+                "기타": ["- 건", "- 원"]
+            },
+            history: [],
+            products: [
+                "1순위  표준 2Q PASS",
+                "2순위  퍼펙트종합(10년고지)",
+                "3순위  내삶엔 3.9.9.9"
+            ],
+            plans: [
+                ["AI", "고객 개인화 추천", 1, "가설계고객", "PRE-" + birthStr + "-01", "표준 2Q PASS", dateStr, "78,500", "18.2", "가심사", ""],
+                ["AI", "베테랑 설계 따라하기", 2, "가설계고객", "PRE-" + birthStr + "-02", "퍼펙트 종합(10년고지)", dateStr, "145,200", "15.7", "가심사", ""],
+                ["AI", "우리 지점 트렌드", 3, "가설계고객", "PRE-" + birthStr + "-03", "내삶엔 3.9.9.9", dateStr, "132,800", "17.1", "가심사", ""]
+            ]
+        };
+        
+        populateCustomer(currentCustomer);
+        applyPreliminaryMode(true);
+        showScreen(2);
         return;
     }
     
+    // 일반 고객 조회
+    const customer = CUSTOMERS[rrn];
+    
+    if (!customer) {
+        showAlert("조회 결과", "샘플 데이터가 없습니다.\n\n• 동의고객: 900101-1234567 또는 900101-1000000\n• 가설계: 생년월일6자리-성별1자리 (예: 900101-1)");
+        return;
+    }
+    
+    isPreliminary = false;
     currentCustomer = customer;
     populateCustomer(customer);
+    applyPreliminaryMode(false);
     showScreen(2);
+}
+
+function applyPreliminaryMode(isPrelim) {
+    const customRadio = document.getElementById('custom-ai-radio');
+    const customOption = document.getElementById('custom-ai-option');
+    const oneClickRadio = document.querySelector('input[value="원클릭AI설계(종합보험)"]');
+    
+    if (isPrelim) {
+        // 맞춤 AI설계 비활성화
+        customRadio.disabled = true;
+        customRadio.checked = false;
+        customOption.classList.add('disabled');
+        oneClickRadio.checked = true;
+        
+        // 스크린 타이틀 변경
+        screenTitle.innerText = "2. 설계 요청(가설계고객)";
+    } else {
+        // 맞춤 AI설계 활성화
+        customRadio.disabled = false;
+        customOption.classList.remove('disabled');
+        oneClickRadio.checked = true;
+        
+        screenTitle.innerText = "2. 설계 요청(동의고객)";
+    }
 }
 
 function populateCustomer(customer) {
@@ -188,14 +268,18 @@ function populateCustomer(customer) {
     
     // History
     historyTbody.innerHTML = '';
-    customer.history.forEach(row => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td><span style="background: #f0f4f8; padding: 4px 8px; border-radius: 4px; font-size:12px; color: #2d6a9f; font-weight: 600;">${row[0]}</span></td>
-            <td style="text-align: left; font-weight: 500;">${row[1]}</td>
-        `;
-        historyTbody.appendChild(tr);
-    });
+    if (customer.history.length === 0) {
+        historyTbody.innerHTML = '<tr><td colspan="2" style="padding: 20px; color: #999; font-style: italic;">가설계 - 이력 정보 없음</td></tr>';
+    } else {
+        customer.history.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><span style="background: #f0f4f8; padding: 4px 8px; border-radius: 4px; font-size:12px; color: #2d6a9f; font-weight: 600;">${row[0]}</span></td>
+                <td style="text-align: left; font-weight: 500;">${row[1]}</td>
+            `;
+            historyTbody.appendChild(tr);
+        });
+    }
 }
 
 function runAiDesign() {
