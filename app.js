@@ -31,9 +31,9 @@ const CUSTOMERS = {
             "5순위  실속건강플랜"
         ],
         plans: [
-            ["AI", "고객 개인화 추천", 1, "고객명", "L026-08701817", "표준 2Q PASS", "2026-05-15", "80,160", "20.8", "할증, 부담보", ""],
-            ["AI", "베테랑 설계 따라하기", 2, "고객명", "L026-10815948", "퍼펙트 종합(10년고지)", "2026-05-15", "166,900", "14.5", "정상", ""],
-            ["AI", "우리 지점 트렌드", 3, "고객명", "L026-11250053", "내삶엔 3.9.9.9", "2026-05-15", "151,950", "19.7", "누적조정", "메모"]
+            ["AI", "고객 개인화 추천", 1, "고객명", generatePlanId(), "표준 2Q PASS", "2026-05-15", "80,160", "20.8", "할증, 부담보", ""],
+            ["AI", "베테랑 설계 따라하기", 2, "고객명", generatePlanId(), "퍼펙트 종합(10년고지)", "2026-05-15", "166,900", "14.5", "정상", ""],
+            ["AI", "우리 지점 트렌드", 3, "고객명", generatePlanId(), "내삶엔 3.9.9.9", "2026-05-15", "151,950", "19.7", "누적조정", "메모"]
         ]
     },
     "900101-1000000": {
@@ -63,12 +63,16 @@ const CUSTOMERS = {
             "4순위  운전자 결합플랜"
         ],
         plans: [
-            ["AI", "고객 개인화 추천", 1, "이샘플", "SAMPLE-1001", "원클릭 종합", "2026-05-07", "74,300", "15.2", "정상", ""],
-            ["AI", "베테랑 설계 따라하기", 2, "이샘플", "SAMPLE-1002", "실속 간편", "2026-05-07", "99,100", "13.8", "정상", ""],
-            ["AI", "우리 지점 트렌드", 3, "이샘플", "SAMPLE-1003", "운전자 결합", "2026-05-07", "121,500", "11.2", "부담보", "메모"]
+            ["AI", "고객 개인화 추천", 1, "이샘플", generatePlanId(), "원클릭 종합", "2026-05-07", "74,300", "15.2", "정상", ""],
+            ["AI", "베테랑 설계 따라하기", 2, "이샘플", generatePlanId(), "실속 간편", "2026-05-07", "99,100", "13.8", "정상", ""],
+            ["AI", "우리 지점 트렌드", 3, "이샘플", generatePlanId(), "운전자 결합", "2026-05-07", "121,500", "11.2", "부담보", "메모"]
         ]
     }
 };
+
+function generatePlanId() {
+    return "L026" + Math.floor(10000000 + Math.random() * 90000000).toString();
+}
 
 let currentCustomer = null;
 let isPreliminary = false; // 가설계 모드 여부
@@ -124,6 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Custom Design Modal buttons
     document.getElementById('cd-close-btn').addEventListener('click', hideCustomDesignModal);
     document.getElementById('cd-submit-btn').addEventListener('click', submitCustomDesign);
+    
+    // Plan Detail Modal close button
+    document.getElementById('pd-close-btn').addEventListener('click', hidePlanDetailModal);
 
     // 태아보험 체크박스 토글
     const prenatalCheckbox = document.querySelector('input[value="태아보험"]');
@@ -346,16 +353,16 @@ function generatePreliminaryPlans(type) {
     if (type === '유병자') {
         productName = "간편 3.10.10";
         plans = [
-            ["AI", "고객 개인화 추천", 1, "가설계고객", "PRE-" + birthStr + "-01", productName, dateStr, "85,300", "19.4", "가심사", ""],
-            ["AI", "베테랑 설계 따라하기", 2, "가설계고객", "PRE-" + birthStr + "-02", productName, dateStr, "112,600", "16.8", "가심사", ""],
-            ["AI", "우리 지점 트렌드", 3, "가설계고객", "PRE-" + birthStr + "-03", productName, dateStr, "97,400", "18.1", "가심사", ""]
+            ["AI", "고객 개인화 추천", 1, "가설계고객", generatePlanId(), productName, dateStr, "85,300", "19.4", "가심사", ""],
+            ["AI", "베테랑 설계 따라하기", 2, "가설계고객", generatePlanId(), productName, dateStr, "112,600", "16.8", "가심사", ""],
+            ["AI", "우리 지점 트렌드", 3, "가설계고객", generatePlanId(), productName, dateStr, "97,400", "18.1", "가심사", ""]
         ];
     } else {
         productName = "퍼펙트 플러스";
         plans = [
-            ["AI", "고객 개인화 추천", 1, "가설계고객", "PRE-" + birthStr + "-01", productName, dateStr, "78,500", "18.2", "가심사", ""],
-            ["AI", "베테랑 설계 따라하기", 2, "가설계고객", "PRE-" + birthStr + "-02", productName, dateStr, "145,200", "15.7", "가심사", ""],
-            ["AI", "우리 지점 트렌드", 3, "가설계고객", "PRE-" + birthStr + "-03", productName, dateStr, "132,800", "17.1", "가심사", ""]
+            ["AI", "고객 개인화 추천", 1, "가설계고객", generatePlanId(), productName, dateStr, "78,500", "18.2", "가심사", ""],
+            ["AI", "베테랑 설계 따라하기", 2, "가설계고객", generatePlanId(), productName, dateStr, "145,200", "15.7", "가심사", ""],
+            ["AI", "우리 지점 트렌드", 3, "가설계고객", generatePlanId(), productName, dateStr, "132,800", "17.1", "가심사", ""]
         ];
     }
     
@@ -384,6 +391,8 @@ function renderPlans(plans) {
                 html += `<td><span style="color: ${color}; font-weight: 600;">${item}</span></td>`;
             } else if (idx === 1) {
                 html += `<td><span style="background: #eef2f7; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; color: #233b69; white-space: nowrap;">${item}</span></td>`;
+            } else if (idx === 4) {
+                html += `<td><a class="plan-link" onclick='showPlanDetail(${JSON.stringify(plan).replace(/'/g, "&#39;")})'>${item}</a></td>`;
             } else {
                 html += `<td>${item}</td>`;
             }
@@ -449,9 +458,9 @@ function submitCustomDesign() {
     else if (selectedPremium === '15만원초과') premiums = ["168,900", "185,200", "201,700"];
     
     const plans = [
-        ["AI", "고객 개인화 추천", 1, custName, "CUSTOM-" + dateStr.replace(/-/g,'') + "-01", productName, dateStr, premiums[0], "17.5", "정상", ""],
-        ["AI", "베테랑 설계 따라하기", 2, custName, "CUSTOM-" + dateStr.replace(/-/g,'') + "-02", productName, dateStr, premiums[1], "15.2", "정상", ""],
-        ["AI", "우리 지점 트렌드", 3, custName, "CUSTOM-" + dateStr.replace(/-/g,'') + "-03", productName, dateStr, premiums[2], "13.8", "정상", ""]
+        ["AI", "고객 개인화 추천", 1, custName, generatePlanId(), productName, dateStr, premiums[0], "17.5", "정상", ""],
+        ["AI", "베테랑 설계 따라하기", 2, custName, generatePlanId(), productName, dateStr, premiums[1], "15.2", "정상", ""],
+        ["AI", "우리 지점 트렌드", 3, custName, generatePlanId(), productName, dateStr, premiums[2], "13.8", "정상", ""]
     ];
     
     currentCustomer.plans = plans;
@@ -475,4 +484,36 @@ function resetStepper() {
         if (index <= 2) step.classList.add('active', 'highlight');
         if (index === 0) step.classList.remove('highlight');
     });
+}
+
+function showPlanDetail(plan) {
+    document.getElementById('pd-product-name').textContent = plan[5];
+    document.getElementById('pd-plan-id').textContent = plan[4];
+    document.getElementById('pd-premium').textContent = plan[7];
+    document.getElementById('pd-audit-result').textContent = plan[9];
+    
+    const reasonType = plan[1];
+    const titleEl = document.getElementById('pd-reason-title');
+    const statEl = document.getElementById('pd-stat');
+    const simEl = document.getElementById('pd-similarity');
+    
+    if (reasonType === "고객 개인화 추천") {
+        titleEl.textContent = "[설계 주제] 고객 맞춤 (유사고객)";
+        statEl.innerHTML = "대장용종 병력을 가지고 있는 분들의 <strong>50.0%</strong>가 가입 중인 상품입니다.";
+        simEl.textContent = "88.8%";
+    } else if (reasonType === "베테랑 설계 따라하기") {
+        titleEl.textContent = "[설계 주제] 우수 설계 따라하기";
+        statEl.innerHTML = "우수 플래너들이 가장 많이 설계한 <strong>Top 3</strong> 구성입니다.";
+        simEl.textContent = "92.5%";
+    } else {
+        titleEl.textContent = "[설계 주제] 최신 트렌드";
+        statEl.innerHTML = "최근 3개월 지점 내 최다 판매를 기록한 <strong>인기 트렌드</strong> 상품입니다.";
+        simEl.textContent = "85.2%";
+    }
+    
+    document.getElementById('plan-detail-modal').classList.add('show');
+}
+
+function hidePlanDetailModal() {
+    document.getElementById('plan-detail-modal').classList.remove('show');
 }

@@ -378,6 +378,41 @@
         </div>
     </div>
 
+    <!-- 설계 상세 결과 (추천 사유) 팝업 -->
+    <div id="plan-detail-modal" class="modal">
+        <div class="modal-content plan-detail-popup">
+            <div class="plan-detail-top-box">
+                <div class="pd-title">상품명 : <span id="pd-product-name">간편한3.10.10건강보험</span></div>
+                <div class="pd-subtitle">30년납/30년만기 / 연만기 / 해약환급금미지급형</div>
+            </div>
+            
+            <div class="plan-detail-body">
+                <h3 class="pd-reason-title" id="pd-reason-title">[설계 주제] 고객 맞춤 (유사고객)</h3>
+                <p class="pd-desc">고객님의 가입정보를 기반 중 암/뇌/심 중증질환 기왕력 및 다빈도질환 이력이 비슷한 고객님들이 많이 가입한 상품 중 보장 자산이 많이 담긴 설계를 추천 드립니다.</p>
+                <p class="pd-stat" id="pd-stat">대장용종 병력을 가지고 있는 분들의 <strong>50.0%</strong>가 가입 중인 상품입니다.</p>
+                <p class="pd-info">질병 유사도 : <span id="pd-similarity">88.8%</span></p>
+                <p class="pd-info">유사질병 : 양성종양, 경계성종양, 직장암, 대장암</p>
+                <p class="pd-info">플래너 요청 포함 담보 비율 (70.9%) : 암진단 / 암주요치료비 / 입원일당</p>
+                <p class="pd-info">인수심사결과 : <span id="pd-audit-result">부담보 (직장 2년, 대장2년)</span></p>
+            </div>
+
+            <div class="plan-detail-bottom-box">
+                <div class="pd-summary">
+                    <span>계약번호 : <span id="pd-plan-id">L02608701817</span></span>
+                    <span>납입보험료 : <span id="pd-premium">150,000</span>원</span>
+                </div>
+                <div class="pd-notice">※ 가심사 결과는 참고용이며, 실제 가입 여부 및 조건은 정식 심사 결과에 따라 달라질 수 있습니다.</div>
+            </div>
+
+            <div class="plan-detail-footer">
+                <button class="btn btn-outline">플랜 비교하기</button>
+                <button class="btn btn-primary" style="background: #f58220; border-color: #f58220;">누적시뮬레이션</button>
+                <button class="btn btn-primary" style="background: #e65c00; border-color: #e65c00;">인수심사보기</button>
+                <button id="pd-close-btn" class="btn btn-secondary" style="background: white; color: #333; border: 1px solid #ccc;">닫기</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal for Alerts -->
     <div id="alert-modal" class="modal">
         <div class="modal-content">

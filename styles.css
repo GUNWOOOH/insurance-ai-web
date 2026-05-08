@@ -1107,3 +1107,101 @@ h1, h2, h3 { font-weight: 700; }
     background: #f8f9fa;
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
+
+/* Plan Detail Popup */
+.plan-detail-popup {
+    width: 600px;
+    max-width: 95vw;
+    padding: 0;
+    border: none;
+    overflow: hidden;
+}
+
+.plan-detail-top-box {
+    background: var(--primary);
+    color: white;
+    padding: 16px 20px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.plan-detail-top-box .pd-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.plan-detail-top-box .pd-subtitle {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.plan-detail-body {
+    background: #f4f6f8;
+    padding: 24px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.pd-reason-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--secondary);
+}
+
+.pd-desc {
+    margin-bottom: 16px;
+}
+
+.pd-stat {
+    margin-bottom: 16px;
+}
+
+.pd-info {
+    margin-bottom: 8px;
+}
+
+.pd-info span {
+    font-weight: 600;
+}
+
+.plan-detail-bottom-box {
+    background: var(--primary);
+    color: white;
+    padding: 16px 20px;
+}
+
+.pd-summary {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.pd-notice {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.plan-detail-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 16px 20px;
+    background: white;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* Plan Link (Clickable ID) */
+.plan-link {
+    color: var(--primary);
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.plan-link:hover {
+    color: #d66b15;
+}
