@@ -350,8 +350,6 @@ function runAiDesign() {
     document.getElementById('ai-review-step').classList.remove('active', 'highlight');
     document.getElementById('ai-review-step').classList.add('active');
     document.getElementById('compare-step').classList.add('active', 'highlight');
-    
-    showAlert("AI 설계 완료", `AI 원클릭 설계 결과로 ${currentCustomer.plans.length}개의 계약안이 생성되었습니다.`);
 }
 
 function generatePreliminaryPlans(type) {
@@ -382,8 +380,6 @@ function generatePreliminaryPlans(type) {
     document.getElementById('ai-review-step').classList.remove('active', 'highlight');
     document.getElementById('ai-review-step').classList.add('active');
     document.getElementById('compare-step').classList.add('active', 'highlight');
-    
-    showAlert("AI 설계 완료", `[${type}] ${productName} 기준으로\n3개의 가설계안이 생성되었습니다.`);
 }
 
 function renderPlans(plans) {
