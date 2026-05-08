@@ -136,13 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-audit-view').addEventListener('click', showAuditModal);
     document.getElementById('audit-close-btn').addEventListener('click', hideAuditModal);
 
-    // 태아보험 체크박스 토글
-    const prenatalCheckbox = document.querySelector('input[value="태아보험"]');
-    if (prenatalCheckbox) {
-        prenatalCheckbox.addEventListener('change', (e) => {
-            document.getElementById('prenatal-options').style.display = e.target.checked ? 'block' : 'none';
+    // 태아보험 라디오 토글
+    const productRadios = document.querySelectorAll('input[name="product"]');
+    productRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            document.getElementById('prenatal-options').style.display = (e.target.value === '태아보험') ? 'block' : 'none';
         });
-    }
+    });
 });
 
 function showScreen(screenNum) {
@@ -429,26 +429,26 @@ function hideCustomDesignModal() {
 }
 
 function submitCustomDesign() {
-    // 선택된 상품 수집
-    const selectedProducts = Array.from(document.querySelectorAll('input[name="product"]:checked')).map(c => c.value);
+    // 선택된 상품 수집 (라디오 버튼)
+    const selectedProduct = document.querySelector('input[name="product"]:checked')?.value;
     const selectedCoverages = Array.from(document.querySelectorAll('input[name="coverage"]:checked')).map(c => c.value);
     const selectedPremium = document.querySelector('input[name="premium"]:checked')?.value || '헬퍼추천';
     
-    if (selectedProducts.length === 0) {
+    if (!selectedProduct) {
         hideCustomDesignModal();
-        showAlert("안내", "상품 구분을 1개 이상 선택해주세요.");
+        showAlert("안내", "상품 구분을 선택해주세요.");
         return;
     }
     
     // 상품명 결정
     let productName = "맞춤 종합플랜";
-    if (selectedProducts.includes('종합보험_유병자')) {
+    if (selectedProduct === '종합보험_유병자') {
         productName = "맞춤 간편플랜";
-    } else if (selectedProducts.includes('운전자보험')) {
+    } else if (selectedProduct === '운전자보험') {
         productName = "맞춤 운전자플랜";
-    } else if (selectedProducts.includes('간병치매보험')) {
+    } else if (selectedProduct === '간병치매보험') {
         productName = "맞춤 간병플랜";
-    } else if (selectedProducts.includes('태아보험')) {
+    } else if (selectedProduct === '태아보험') {
         productName = "어린이Q";
     }
     
