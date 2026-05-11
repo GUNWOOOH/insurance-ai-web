@@ -147,6 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('compare-close-btn').addEventListener('click', hideCompareModal);
     document.getElementById('compare-close-x').addEventListener('click', hideCompareModal);
 
+    // Contract Detail Modal buttons
+    document.getElementById('cd-modal-close-btn').addEventListener('click', hideContractDetailModal);
+    document.getElementById('cd-modal-close-x').addEventListener('click', hideContractDetailModal);
+
 
     // 태아보험 라디오 토글
     const productRadios = document.querySelectorAll('input[name="product"]');
@@ -304,6 +308,11 @@ function populateCustomer(customer) {
             <div class="label">${company}</div>
             <div class="value">${data[0]}<br>${data[1]}</div>
         `;
+        div.onclick = () => {
+            if (data[0] !== "0건" && data[0] !== "- 건") {
+                showContractDetailModal(company);
+            }
+        };
         summaryGrid.appendChild(div);
     });
     
@@ -688,4 +697,67 @@ function hideCompareModal() {
 
 function hideSimModal() {
     document.getElementById('sim-modal').classList.remove('show');
+}
+
+function showContractDetailModal(company) {
+    document.getElementById('cd-company-name').textContent = company;
+    const listContainer = document.getElementById('cd-contract-list');
+    listContainer.innerHTML = '';
+
+    // Mock data generators
+    const mockData = {
+        "현대해상": [
+            { name: "무배당 퍼펙트플러스종합보험", status: "유지", coverages: ["일반상해후유장해", "암진단비(유사암제외)", "뇌혈관질환진단비", "질병수술비"] },
+            { name: "무배당 굿앤굿어린이종합보험Q", status: "유지", coverages: ["골절진단비", "상해입원일당", "질병입원일당", "가족일상생활배상책임"] },
+            { name: "무배당 뉴하이카운전자상해보험", status: "유지", coverages: ["자동차사고벌금", "교통사고처리지원금", "변호사선임비용"] }
+        ],
+        "손해보험": [
+            { name: "무배당 프로미라이프 건강보험", status: "유지", coverages: ["암진단비", "유사암진단비", "항암방사선약물치료비"] },
+            { name: "무배당 다이렉트 운전자보험", status: "유지", coverages: ["자동차사고부상치료비", "운전자벌금"] }
+        ],
+        "생명보험": [
+            { name: "무배당 프리미엄 종신보험", status: "유지", coverages: ["일반사망", "재해사망"] },
+            { name: "무배당 변액연금보험", status: "유지", coverages: ["연금지급개시후 연금", "재해장해급여금"] },
+            { name: "(무) 다이렉트 암보험", status: "유지", coverages: ["고액암진단자금", "암수술급여금"] },
+            { name: "(무) 정기보험", status: "유지", coverages: ["사망보험금"] },
+            { name: "(무) 치아보험", status: "유지", coverages: ["임플란트치료자금", "크라운치료자금"] }
+        ],
+        "기타": [
+            { name: "우체국 안전벨트보험", status: "유지", coverages: ["교통재해사망", "교통재해입원"] }
+        ]
+    };
+
+    const contracts = mockData[company] || [];
+
+    if (contracts.length === 0) {
+        listContainer.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">가입 내역이 없습니다.</p>';
+    } else {
+        contracts.forEach(contract => {
+            const card = document.createElement('div');
+            card.className = 'contract-card';
+            
+            const coveragesHtml = contract.coverages.map(cov => `<span class="coverage-tag">${cov}</span>`).join('');
+            
+            card.innerHTML = `
+                <div class="contract-card-header">
+                    <span class="product-name">${contract.name}</span>
+                    <span class="status">${contract.status}</span>
+                </div>
+                <div class="contract-card-info">
+                    <span>가입일자: 202${Math.floor(Math.random() * 4) + 1}-0${Math.floor(Math.random() * 9) + 1}-15</span>
+                    <span>증권번호: L0${Math.floor(Math.random() * 9000000) + 1000000}</span>
+                </div>
+                <div class="contract-card-coverages">
+                    ${coveragesHtml}
+                </div>
+            `;
+            listContainer.appendChild(card);
+        });
+    }
+
+    document.getElementById('contract-detail-modal').classList.add('show');
+}
+
+function hideContractDetailModal() {
+    document.getElementById('contract-detail-modal').classList.remove('show');
 }

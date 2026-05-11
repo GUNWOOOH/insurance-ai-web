@@ -747,6 +747,24 @@
         </div>
     </div>
 
+    <!-- 기가입 내역 상세 팝업 -->
+    <div id="contract-detail-modal" class="modal">
+        <div class="modal-content contract-detail-popup">
+            <div class="cd-header">
+                <h2><span id="cd-company-name">현대해상</span> 기가입 내역 상세</h2>
+                <button id="cd-modal-close-x" class="audit-close">&times;</button>
+            </div>
+            <div class="cd-body">
+                <div class="cd-list" id="cd-contract-list">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            <div class="cd-footer">
+                <button id="cd-modal-close-btn" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+
     <!-- AI 설계 로딩 오버레이 -->
     <div id="ai-loading-overlay" class="loading-overlay" style="display: none;">
         <div class="loading-content">
