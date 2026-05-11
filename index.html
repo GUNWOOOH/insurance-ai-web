@@ -262,7 +262,7 @@
             </div>
 
             <div class="action-bar">
-                <button class="btn btn-outline">플랜 비교하기</button>
+                <button id="btn-compare-plans" class="btn btn-outline">플랜 비교하기</button>
                 <button class="btn btn-outline">누적시뮬레이션</button>
                 <button class="btn btn-outline">인수심사보기</button>
                 <button class="btn btn-outline">AI설계명세</button>
@@ -396,7 +396,7 @@
             </div>
 
             <div class="plan-detail-footer">
-                <button class="btn btn-outline">플랜 비교하기</button>
+                <button id="btn-pd-compare" class="btn btn-outline">플랜 비교하기</button>
                 <button id="btn-sim-view" class="btn btn-primary" style="background: #f58220; border-color: #f58220;">누적시뮬레이션</button>
                 <button id="btn-audit-view" class="btn btn-primary" style="background: #e65c00; border-color: #e65c00;">인수심사보기</button>
                 <button id="pd-close-btn" class="btn btn-secondary" style="background: white; color: #333; border: 1px solid #ccc;">닫기</button>
@@ -719,6 +719,33 @@
             </div>
         </div>
 
+
+    </div>
+
+    <!-- 플랜 비교하기 팝업 -->
+    <div id="compare-modal" class="modal">
+        <div class="modal-content compare-popup">
+            <div class="compare-header">
+                <h2>AI 플랜 비교하기</h2>
+                <button id="compare-close-x" class="audit-close">&times;</button>
+            </div>
+            <div class="compare-body">
+                <div class="table-container large" style="margin-top: 10px;">
+                    <table class="data-table compare-table">
+                        <thead id="compare-thead">
+                            <!-- Populated by JS -->
+                        </thead>
+                        <tbody id="compare-tbody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="compare-footer">
+                <button id="compare-close-btn" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
 
     <!-- AI 설계 로딩 오버레이 -->
     <div id="ai-loading-overlay" class="loading-overlay" style="display: none;">

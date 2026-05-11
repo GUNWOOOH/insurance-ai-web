@@ -141,6 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sim-close-x').addEventListener('click', hideSimModal);
     document.getElementById('sim-close-btn').addEventListener('click', hideSimModal);
 
+    // Compare Modal buttons
+    document.getElementById('btn-compare-plans').addEventListener('click', showCompareModal);
+    document.getElementById('btn-pd-compare').addEventListener('click', showCompareModal);
+    document.getElementById('compare-close-btn').addEventListener('click', hideCompareModal);
+    document.getElementById('compare-close-x').addEventListener('click', hideCompareModal);
+
+
     // 태아보험 라디오 토글
     const productRadios = document.querySelectorAll('input[name="product"]');
     productRadios.forEach(radio => {
@@ -613,6 +620,70 @@ function showSimModal() {
     });
 
     document.getElementById('sim-modal').classList.add('show');
+}
+
+function hideSimModal() {
+    document.getElementById('sim-modal').classList.remove('show');
+}
+
+function showCompareModal() {
+    if (!currentCustomer || !currentCustomer.plans || currentCustomer.plans.length === 0) {
+        showAlert("안내", "AI 설계 결과가 없습니다. 먼저 AI 설계를 진행해주세요.");
+        return;
+    }
+
+    const plans = currentCustomer.plans;
+    const thead = document.getElementById('compare-thead');
+    const tbody = document.getElementById('compare-tbody');
+
+    // Build thead
+    let trHead = '<tr><th style="width:25%;">구분 (담보명)</th>';
+    plans.forEach((plan, idx) => {
+        const planId = plan[4];
+        const productName = plan[5];
+        trHead += `
+            <th>
+                <div class="plan-header">
+                    <span class="plan-name">${productName}</span>
+                    <span class="plan-id">${planId}</span>
+                </div>
+            </th>
+        `;
+    });
+    trHead += '</tr>';
+    thead.innerHTML = trHead;
+
+    // Generate mock coverages for comparison
+    const coverages = [
+        { name: "일반암진단비(유사암제외)", baseAmounts: ["5,000만원", "5,000만원", "3,000만원"] },
+        { name: "유사암진단비", baseAmounts: ["1,000만원", "1,000만원", "600만원"] },
+        { name: "뇌혈관질환진단비", baseAmounts: ["2,000만원", "1,000만원", "2,000만원"] },
+        { name: "허혈심장질환진단비", baseAmounts: ["2,000만원", "1,000만원", "2,000만원"] },
+        { name: "질병수술비(모든질병)", baseAmounts: ["50만원", "30만원", "50만원"] },
+        { name: "상해수술비", baseAmounts: ["100만원", "50만원", "100만원"] },
+        { name: "질병후유장해(3~100%)", baseAmounts: ["1,000만원", "미가입", "1,000만원"] },
+        { name: "상해후유장해(3~100%)", baseAmounts: ["1억원", "5,000만원", "1억원"] },
+        { name: "가족일상생활배상책임", baseAmounts: ["1억원", "1억원", "1억원"] }
+    ];
+
+    // Build tbody
+    tbody.innerHTML = '';
+    coverages.forEach(cov => {
+        const tr = document.createElement('tr');
+        let html = `<td class="coverage-name">${cov.name}</td>`;
+        plans.forEach((plan, idx) => {
+            const amount = cov.baseAmounts[idx] || "-";
+            html += `<td class="amount">${amount}</td>`;
+        });
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
+    });
+
+    document.getElementById('compare-modal').classList.add('show');
+}
+
+function hideCompareModal() {
+    document.getElementById('compare-modal').classList.remove('show');
 }
 
 function hideSimModal() {
