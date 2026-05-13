@@ -198,33 +198,13 @@
 
             <div class="bottom-layout">
                 <div class="bottom-left">
-                    <!-- Products -->
-                    <div class="card side-panel">
+                    <div class="card side-panel flex-grow">
                         <div class="card-header accent">
                             <h3>인수가능 상품 순위 (바로컨설팅)</h3>
                         </div>
                         <ul id="product-list" class="styled-list">
                             <!-- Populated by JS -->
                         </ul>
-                    </div>
-                    <!-- History -->
-                    <div class="card side-panel flex-grow">
-                        <div class="card-header dark-accent">
-                            <h3>기가입 이력 / 기왕력</h3>
-                        </div>
-                        <div class="table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 30%">구분</th>
-                                        <th>내용</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="history-tbody">
-                                    <!-- Populated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
 
@@ -265,7 +245,7 @@
                 <button id="btn-compare-plans" class="btn btn-outline">플랜 비교하기</button>
                 <button class="btn btn-outline">누적시뮬레이션</button>
                 <button class="btn btn-outline">인수심사보기</button>
-                <button class="btn btn-outline">AI설계명세</button>
+                <button id="btn-ai-specs" class="btn btn-outline">AI설계명세</button>
                 <button class="btn btn-primary">발행</button>
                 <button class="btn btn-secondary">메모 >></button>
                 <button id="close-btn" class="btn btn-ghost" style="margin-left: auto;">닫기</button>
@@ -761,6 +741,78 @@
             </div>
             <div class="cd-footer">
                 <button id="cd-modal-close-btn" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI설계명세 팝업 -->
+    <div id="ai-specs-modal" class="modal">
+        <div class="modal-content ai-specs-popup">
+            <div class="specs-header-top">
+                <span style="font-weight: bold; font-size: 15px;">AI설계명세</span>
+                <button id="ai-specs-close-x" class="specs-close-x">&times;</button>
+            </div>
+            
+            <div class="specs-filter-area">
+                <div class="specs-filter-row">
+                    <div class="filter-group">
+                        <span class="filter-label">업무구분</span>
+                        <label class="radio-label-inline"><input type="radio" name="work_type" checked> 가입설계</label>
+                        <label class="radio-label-inline"><input type="radio" name="work_type"> 변경설계</label>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">조회구분</span>
+                        <select class="filter-select"><option>피보험자번호</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">번호/명칭</span>
+                        <div class="filter-input-wrap">
+                            <input type="text" class="filter-input-text">
+                            <button class="filter-icon-btn"><span class="material-symbols-outlined" style="font-size: 14px;">search</span></button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="margin-left: auto; background: #e65c00; border: none; padding: 4px 16px;">조회</button>
+                </div>
+                
+                <div class="specs-filter-row" style="margin-top: 4px; padding-top: 4px; border-top: 1px solid #ddd;">
+                    <div class="filter-group">
+                        <span class="filter-label">대상기간</span>
+                        <select class="filter-select"><option>설계보관일</option></select>
+                        <input type="date" value="2026-03-01" class="filter-date-input"> ~
+                        <input type="date" value="2026-03-31" class="filter-date-input">
+                        <button class="btn btn-secondary" style="padding: 2px 8px; font-size: 12px; height: 24px; border-radius: 2px;">전일</button>
+                    </div>
+                    <div class="filter-group" style="margin-left: 10px;">
+                        <span class="filter-label" style="background: #ffe0b2;">상품조회</span>
+                        <input type="text" class="filter-input-text" style="width: 150px;">
+                    </div>
+                    <button class="btn btn-secondary" style="margin-left: auto; padding: 4px 16px; background: #999; color: white; border: none;">초기화</button>
+                </div>
+            </div>
+
+            <div class="specs-table-container">
+                <table class="specs-table">
+                    <thead>
+                        <tr>
+                            <th width="30"><input type="checkbox"></th>
+                            <th width="40">구분 ▼</th>
+                            <th width="40">순번 ▼</th>
+                            <th width="70">피보험자 ▼</th>
+                            <th width="120">주제명 ▼</th>
+                            <th width="110">설계번호 ▼</th>
+                            <th>상품명 ▼</th>
+                            <th width="80">설계일자 ▼</th>
+                            <th width="70">보험료(원) ▼</th>
+                            <th width="60">하이캡<br>배수 ▼</th>
+                            <th width="130">보험기간 ▼</th>
+                            <th width="60">심사결과 ▼</th>
+                            <th width="60">메모 ▼</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ai-specs-tbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

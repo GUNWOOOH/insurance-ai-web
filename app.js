@@ -151,6 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cd-modal-close-btn').addEventListener('click', hideContractDetailModal);
     document.getElementById('cd-modal-close-x').addEventListener('click', hideContractDetailModal);
 
+    // AI Specs Modal button
+    document.getElementById('btn-ai-specs').addEventListener('click', showAiSpecsModal);
+    document.getElementById('ai-specs-close-x').addEventListener('click', hideAiSpecsModal);
+
 
     // 태아보험 라디오 토글
     const productRadios = document.querySelectorAll('input[name="product"]');
@@ -295,6 +299,13 @@ function populateCustomer(customer) {
         개인정보 동의여부 : ${customer.consent}<br>
         동의종료일 : ${customer.consent_end}
     `;
+
+    // 실손보험 가입 이력 추출
+    const silsonHistory = customer.history.find(h => h[1].includes("실손보험"));
+    if (silsonHistory) {
+        infoHtml += `<br><span style="color: #d32f2f; font-weight: 600;">실손보험 가입 이력 : ${silsonHistory[1].replace("실손보험 가입", "") || "-"}</span>`;
+    }
+
     custInfoText.innerHTML = infoHtml;
     
     // Summary
@@ -324,20 +335,11 @@ function populateCustomer(customer) {
         productList.appendChild(li);
     });
     
-    // History
+    // History (Removed per user request - moved to customer info)
+    /*
     historyTbody.innerHTML = '';
-    if (customer.history.length === 0) {
-        historyTbody.innerHTML = '<tr><td colspan="2" style="padding: 20px; color: #999; font-style: italic;">가설계 - 이력 정보 없음</td></tr>';
-    } else {
-        customer.history.forEach(row => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><span style="background: #f0f4f8; padding: 4px 8px; border-radius: 4px; font-size:12px; color: #2d6a9f; font-weight: 600;">${row[0]}</span></td>
-                <td style="text-align: left; font-weight: 500;">${row[1]}</td>
-            `;
-            historyTbody.appendChild(tr);
-        });
-    }
+    if (customer.history.length === 0) { ... }
+    */
 }
 
 function runAiDesign() {
@@ -760,4 +762,54 @@ function showContractDetailModal(company) {
 
 function hideContractDetailModal() {
     document.getElementById('contract-detail-modal').classList.remove('show');
+}
+
+function showAiSpecsModal() {
+    const tbody = document.getElementById('ai-specs-tbody');
+    tbody.innerHTML = '';
+    
+    const mockData = [
+        { isHighlighted: true, type: "AI", no: 1, name: "김현대", theme: "유사고객플랜", id: "L026 11379888", prod: "굿앤굿스타종합보험(hi2603)", date: "2026-03-24", premium: "81,780", mult: "32.7", period: "20260324~20460324", result: "할증", memo: "" },
+        { isHighlighted: true, type: "AI", no: 2, name: "김현대", theme: "FM팀장플랜", id: "L026 11376101", prod: "굿앤굿스타종합보험(hi2603)", date: "2026-03-24", premium: "100,230", mult: "25.4", period: "20260324~20460324", result: "할증", memo: "", memoStyle: "background: #ffe0b2;" },
+        { isHighlighted: false, type: "AI", no: 3, name: "홍해상", theme: "유사고객플랜", id: "L026 11762154", prod: "굿앤굿스타종합보험(hi2603)", date: "2026-03-25", premium: "291,780", mult: "17.7", period: "20260325~20460325", result: "부담보", memo: "" },
+        { isHighlighted: false, type: "AI", no: 4, name: "홍해상", theme: "FM팀장플랜", id: "L026 11761675", prod: "굿앤굿스타종합보험(hi2603)", date: "2026-03-25", premium: "232,030", mult: "16.7", period: "20260325~20460325", result: "부담보", memo: "" },
+        { isHighlighted: false, type: "AI", no: 5, name: "홍해상", theme: "최신트렌드플랜", id: "L026 11761298", prod: "굿앤굿스타종합보험(hi2603)", date: "2026-03-25", premium: "233,640", mult: "16.6", period: "20260325~20460325", result: "", memo: "누적조정..." },
+        { isHighlighted: false, type: "AI", no: 6, name: "김화재", theme: "유사고객플랜", id: "L026 10034717", prod: "간편한3.10.10건강보험", date: "2026-03-13", premium: "487,500", mult: "13.6", period: "20260313~20460313", result: "", memo: "누적조정..." },
+        { isHighlighted: false, type: "AI", no: 7, name: "김화재", theme: "FM팀장플랜", id: "L026 10009834", prod: "간편한3.10.10건강보험", date: "2026-03-13", premium: "487,500", mult: "14.7", period: "20260313~20460313", result: "", memo: "누적조정..." },
+        { isHighlighted: false, type: "AI", no: 8, name: "김화재", theme: "최신트렌드플랜", id: "L026 10009200", prod: "간편한3.10.10건강보험", date: "2026-03-13", premium: "487,500", mult: "14.9", period: "20260313~20460313", result: "", memo: "" },
+        { isHighlighted: false, type: "AI", no: 9, name: "김화재", theme: "유사고객플랜", id: "L026 10002795", prod: "간편한3.10.10건강보험", date: "2026-03-13", premium: "43,020", mult: "18.8", period: "20260313~20460313", result: "", memo: "" },
+        { isHighlighted: false, type: "AI", no: 10, name: "김보험", theme: "FM팀장플랜", id: "L026 12133179", prod: "퍼펙트플러스종합보험", date: "2026-03-27", premium: "83,770", mult: "14.3", period: "20260327~20460327", result: "", memo: "" },
+        { isHighlighted: false, type: "AI", no: 11, name: "김보험", theme: "최신트렌드플랜", id: "L026 12120855", prod: "퍼펙트플러스종합보험", date: "2026-03-27", premium: "187,400", mult: "13.9", period: "20260327~20460327", result: "부담보", memo: "" },
+        { isHighlighted: false, type: "AI", no: 12, name: "김보험", theme: "유사고객플랜", id: "L026 12109517", prod: "퍼펙트플러스종합보험", date: "2026-03-27", premium: "128,560", mult: "16.1", period: "20260327~20460327", result: "", memo: "" },
+        { isHighlighted: false, type: "AI", no: 13, name: "김보험", theme: "FM팀장플랜", id: "L026 12384035", prod: "퍼펙트플러스종합보험", date: "2026-03-30", premium: "201,710", mult: "14.8", period: "20260331~20460331", result: "부담보", memo: "" },
+        { isHighlighted: false, type: "AI", no: 14, name: "김보험", theme: "최신트렌드플랜", id: "L026 12271575", prod: "퍼펙트플러스종합보험", date: "2026-03-30", premium: "183,360", mult: "14.9", period: "20260330~20460330", result: "부담보", memo: "" }
+    ];
+
+    mockData.forEach(item => {
+        const tr = document.createElement('tr');
+        if (item.isHighlighted) tr.className = 'highlight-row';
+        
+        tr.innerHTML = `
+            <td><input type="checkbox" style="width: 12px; height: 12px; margin: 0;"></td>
+            <td>${item.type}</td>
+            <td>${item.no}</td>
+            <td>${item.name}</td>
+            <td>${item.theme}</td>
+            <td>${item.id}</td>
+            <td class="text-left" style="max-width: 160px; overflow: hidden; text-overflow: ellipsis;">${item.prod}</td>
+            <td>${item.date}</td>
+            <td style="text-align: right; padding-right: 8px;">${item.premium}</td>
+            <td>${item.mult}</td>
+            <td>${item.period}</td>
+            <td>${item.result}</td>
+            <td style="${item.memoStyle || ''}; font-weight: ${item.memo ? 'bold' : 'normal'};">${item.memo}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    document.getElementById('ai-specs-modal').classList.add('show');
+}
+
+function hideAiSpecsModal() {
+    document.getElementById('ai-specs-modal').classList.remove('show');
 }
