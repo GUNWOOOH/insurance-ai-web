@@ -927,6 +927,160 @@
         </div>
     </div>
 
+    <!-- 추천 설계 불러오기 팝업 -->
+    <div id="recommended-plan-modal" class="modal">
+        <div class="modal-content my-plan-popup">
+            <div class="my-plan-header" style="background: #e65c00;">
+                <h2>추천 설계 불러오기 (지역/사업부)</h2>
+                <button id="recommended-plan-close-x" class="specs-close-x">&times;</button>
+            </div>
+            
+            <div class="my-plan-tabs">
+                <div class="mp-tab active">장기</div>
+                <div class="mp-tab">일반</div>
+            </div>
+
+            <div class="my-plan-filter-area">
+                <div class="mp-filter-row">
+                    <div class="filter-group">
+                        <span class="filter-label">지역단</span>
+                        <select class="filter-select"><option>강남지역단</option><option>서초지역단</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">사업부</span>
+                        <select class="filter-select"><option>강남사업부</option><option>서초사업부</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">지점</span>
+                        <select class="filter-select"><option>양재지점</option><option>서초지점</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">설계사</span>
+                        <input type="text" class="filter-input-text" placeholder="설계사명" style="width: 100px;">
+                    </div>
+                </div>
+                
+                <div class="mp-filter-row">
+                    <div class="filter-group">
+                        <span class="filter-label">대상기간</span>
+                        <select class="filter-select"><option>설계일자</option></select>
+                        <input type="date" value="2026-05-01" class="filter-date-input"> ~
+                        <input type="date" value="2026-05-13" class="filter-date-input">
+                    </div>
+                    <div class="filter-group" style="margin-left: 20px;">
+                        <span class="filter-label">설계주제</span>
+                        <select class="filter-select" style="width: 150px;">
+                            <option>전체</option>
+                            <option>베테랑 설계 따라하기</option>
+                            <option>우리 지점 트렌드</option>
+                            <option>우수 플래너 추천</option>
+                        </select>
+                    </div>
+                    <button class="btn-filter-action orange" style="margin-left: auto;">조회</button>
+                </div>
+            </div>
+
+            <div class="mp-table-container">
+                <table class="mp-table">
+                    <thead>
+                        <tr>
+                            <th width="150">상품명</th>
+                            <th width="100">설계번호</th>
+                            <th width="80">설계자</th>
+                            <th width="100">설계주제</th>
+                            <th width="70">피보험자</th>
+                            <th width="160">보험기간</th>
+                            <th width="90">보험료(원)</th>
+                            <th width="60">하이캡<br>배수</th>
+                            <th>추천사유</th>
+                            <th width="60">선택</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recommended-plan-tbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 추천 설계 불러오기 팝업 -->
+    <div id="recommended-plan-modal" class="modal">
+        <div class="modal-content my-plan-popup">
+            <div class="my-plan-header" style="background: #e65c00;">
+                <h2>추천 설계 불러오기 (지역/사업부)</h2>
+                <button id="recommended-plan-close-x" class="specs-close-x">&times;</button>
+            </div>
+            
+            <div class="my-plan-tabs">
+                <div class="mp-tab active">장기</div>
+                <div class="mp-tab">일반</div>
+            </div>
+
+            <div class="my-plan-filter-area">
+                <div class="mp-filter-row">
+                    <div class="filter-group">
+                        <span class="filter-label">지역단</span>
+                        <select class="filter-select"><option>강남지역단</option><option>서초지역단</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">사업부</span>
+                        <select class="filter-select"><option>강남사업부</option><option>서초사업부</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">지점</span>
+                        <select class="filter-select"><option>양재지점</option><option>서초지점</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">설계사</span>
+                        <input type="text" class="filter-input-text" placeholder="설계사명" style="width: 100px;">
+                    </div>
+                </div>
+                
+                <div class="mp-filter-row">
+                    <div class="filter-group">
+                        <span class="filter-label">대상기간</span>
+                        <select class="filter-select"><option>설계일자</option></select>
+                        <input type="date" value="2026-05-01" class="filter-date-input"> ~
+                        <input type="date" value="2026-05-13" class="filter-date-input">
+                    </div>
+                    <div class="filter-group" style="margin-left: 20px;">
+                        <span class="filter-label">설계주제</span>
+                        <select class="filter-select" style="width: 150px;">
+                            <option>전체</option>
+                            <option>베테랑 설계 따라하기</option>
+                            <option>우리 지점 트렌드</option>
+                            <option>우수 플래너 추천</option>
+                        </select>
+                    </div>
+                    <button class="btn-filter-action orange" style="margin-left: auto;">조회</button>
+                </div>
+            </div>
+
+            <div class="mp-table-container">
+                <table class="mp-table">
+                    <thead>
+                        <tr>
+                            <th width="150">상품명</th>
+                            <th width="100">설계번호</th>
+                            <th width="80">설계자</th>
+                            <th width="100">설계주제</th>
+                            <th width="70">피보험자</th>
+                            <th width="160">보험기간</th>
+                            <th width="90">보험료(원)</th>
+                            <th width="60">하이캡<br>배수</th>
+                            <th>추천사유</th>
+                            <th width="60">선택</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recommended-plan-tbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- AI 설계 로딩 오버레이 -->
     <div id="ai-loading-overlay" class="loading-overlay" style="display: none;">
         <div class="loading-content">
