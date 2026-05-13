@@ -24,11 +24,9 @@ const CUSTOMERS = {
             ["기가입", "운전자 특약 유지 중"]
         ],
         products: [
-            "1순위  표준 2Q PASS",
-            "2순위  퍼펙트종합(10년고지)",
-            "3순위  내삶N(3.9.9.9)",
-            "4순위  2Q PASS 내삶N(3.8.8.8)",
-            "5순위  실속건강플랜"
+            "표준 2Q PASS",
+            "퍼펙트종합(10년고지)",
+            "내삶N(3.9.9.9)"
         ],
         plans: [
             ["AI", "고객 개인화 추천", 1, "고객명", generatePlanId(), "표준 2Q PASS", "2026-05-15", "80,160", "20.8", "할증, 부담보", ""],
@@ -57,10 +55,9 @@ const CUSTOMERS = {
             ["기왕력", "최근 3개월 약 처방 이력 없음"]
         ],
         products: [
-            "1순위  원클릭 종합플랜",
-            "2순위  실속 간편플랜",
-            "3순위  표준 건강플랜",
-            "4순위  운전자 결합플랜"
+            "원클릭 종합플랜",
+            "실속 간편플랜",
+            "표준 건강플랜"
         ],
         plans: [
             ["AI", "고객 개인화 추천", 1, "이샘플", generatePlanId(), "원클릭 종합", "2026-05-07", "74,300", "15.2", "정상", ""],
@@ -169,6 +166,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('my-plan-close-x').addEventListener('click', hideMyPlanModal);
     document.getElementById('recommended-plan-close-x').addEventListener('click', hideRecommendedPlanModal);
 
+    // AI Result Modal close
+    document.getElementById('ai-result-close-x').addEventListener('click', hideAiResultModal);
+    document.getElementById('ai-result-close-btn').addEventListener('click', hideAiResultModal);
+
 
     // 태아보험 라디오 토글
     const productRadios = document.querySelectorAll('input[name="product"]');
@@ -208,11 +209,13 @@ function hideModal() {
 
 function lookupCustomer() {
     const rrn = rrnInput.value.trim();
-    const grade = document.getElementById('grade-input').value;
+    let grade = document.getElementById('grade-input').value;
     
+    // 13자리 주민번호 확인 (숫자7-숫자7 또는 숫자13)
+    const isFullRRN = rrn.match(/^(\d{6})-?(\d{7})$/);
+
     if (!grade) {
-        showAlert("안내", "급수를 선택해주세요.");
-        return;
+        grade = "1"; // 선택하지 않은 경우 기본 1급으로 세팅
     }
     
     // 가설계 판별: "900101-1" 또는 "9001011" 형태 (6자리 생년월일 + 성별 1자리)
@@ -224,7 +227,6 @@ function lookupCustomer() {
         const birthStr = prelimMatch[1];
         const genderCode = prelimMatch[2];
         const gender = genderCode === '1' ? '남' : '여';
-        const grade = document.getElementById('grade-input').value;
         
         // 생년월일에서 보험나이 계산 (간이)
         const birthYear = parseInt(birthStr.substring(0, 2));
@@ -251,9 +253,9 @@ function lookupCustomer() {
             },
             history: [],
             products: [
-                "1순위  표준 2Q PASS",
-                "2순위  퍼펙트종합(10년고지)",
-                "3순위  내삶엔 3.9.9.9"
+                "표준 2Q PASS",
+                "퍼펙트종합(10년고지)",
+                "내삶엔 3.9.9.9"
             ],
             plans: [],
             _birthStr: birthStr,
@@ -323,7 +325,7 @@ function populateCustomer(customer) {
     // 실손보험 가입 이력 추출
     const silsonHistory = customer.history.find(h => h[1].includes("실손보험"));
     if (silsonHistory) {
-        infoHtml += `<br><span style="color: #d32f2f; font-weight: 600;">실손보험 가입 이력 : ${silsonHistory[1].replace("실손보험 가입", "") || "-"}</span>`;
+        infoHtml += `<br><span style="color: #d32f2f; font-weight: 600;">실손보험 가입 이력 : ${silsonHistory[1].replace("실손보험 가입", "") || "-"} (4세대)</span>`;
     }
 
     custInfoText.innerHTML = infoHtml;
@@ -381,9 +383,10 @@ function runAiDesign() {
         return;
     }
     
-    // 원클릭 AI설계: 로딩 후 플랜 표시
+    // 원클릭 AI설계: 로딩 후 플랜 표시 및 결과 상세 팝업 오픈
     showLoadingOverlay(() => {
         renderPlans(currentCustomer.plans);
+        showAiResultModal();
     });
 }
 
@@ -906,4 +909,76 @@ function showRecommendedPlanModal() {
 
 function hideRecommendedPlanModal() {
     document.getElementById('recommended-plan-modal').classList.remove('show');
+}
+
+// AI 설계 결과 상세 팝업
+function showAiResultModal() {
+    // 1번 탭 초기화
+    switchResultTab(1);
+    document.getElementById('ai-result-modal').classList.add('show');
+}
+
+function hideAiResultModal() {
+    document.getElementById('ai-result-modal').classList.remove('show');
+}
+
+function switchResultTab(tabNum) {
+    // 카드 활성화 상태 업데이트
+    document.querySelectorAll('.plan-result-card').forEach(card => card.classList.remove('active'));
+    document.getElementById(`plan-option-${tabNum}`).classList.add('active');
+
+    // 상세 내용 업데이트 (Mock)
+    const prodNameSpan = document.getElementById('detail-prod-name-span');
+    const planIdSpan = document.getElementById('detail-plan-id');
+    const premiumSpan = document.getElementById('detail-premium');
+    const tbody = document.getElementById('detail-coverage-tbody');
+
+    if (tabNum === 1) {
+        prodNameSpan.innerText = "간편한3.10.10건강보험(세만기형)(Hi2601)(간편건강고지)";
+        planIdSpan.innerText = "L026 08701817";
+        premiumSpan.innerText = "150,000";
+    } else if (tabNum === 2) {
+        prodNameSpan.innerText = "내삶엔(3N)맞춤건강보험(세만기형)(Hi2601)1종(표준형)";
+        planIdSpan.innerText = "L026 10815948";
+        premiumSpan.innerText = "100,000";
+    } else {
+        prodNameSpan.innerText = "내삶엔(3N)맞춤건강보험(세만기형)(Hi2601)2종(해약환급금미지급형)";
+        planIdSpan.innerText = "L026 11250053";
+        premiumSpan.innerText = "70,000";
+    }
+
+    // 담보 상세 데이터 생성
+    const coverages = [
+        ["001", "기본계약(상해사망후유장해)", "30년납100세만기", "10,000", "5,580"],
+        ["002", "보험료납입면제대상", "전기납30년만기", "10", "101"],
+        ["003", "보험료납입지원(유사암진단)", "전기납30년만기", "144,375", "10,221"],
+        ["009", "골절진단", "30년납100세만기", "20", "2,914"],
+        ["011", "골절진단(치아파절제외)", "30년납100세만기", "30", "2,109"],
+        ["013", "골절(치아파절제외)부목치료", "30년납100세만기", "5", "84"],
+        ["015", "5대골절진단", "30년납100세만기", "200", "2,180"],
+        ["016", "화상진단", "30년납100세만기", "50", "759"],
+        ["018", "중증화상/부식진단", "30년납100세만기", "5,000", "105"],
+        ["023", "상해입원일당(1-180일)", "30년납100세만기", "3", "4,995"],
+        ["028", "상해입원일당(1-30일,종합병원,1인실)", "30년납100세만기", "4", "28"],
+        ["029", "상해입원일당(1-30일,상급종합병원,1인실)", "30년납100세만기", "30", "42"],
+        ["030", "상해입원일당(1-30일,종합병원,2~3인실)", "30년납100세만기", "2", "148"],
+        ["032", "상해입원일당(1-30일,상급종합병원,2~3인실)", "30년납100세만기", "7", "77"],
+        ["035", "상해입원일당(1-180일,중환자실)", "30년납100세만기", "10", "650"],
+        ["043", "상해외과수술(당일입원제외)", "30년납100세만기", "100", "2,320"],
+        ["044", "상해통원수술(당일입원포함)", "30년납100세만기", "100", "2,450"],
+        ["051", "상해수술III(1-5종)(수술회당지급)(1종)", "30년납100세만기", "20", "490"]
+    ];
+
+    tbody.innerHTML = '';
+    coverages.forEach(cov => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${cov[0]}</td>
+            <td class="text-left">${cov[1]}</td>
+            <td>${cov[2]}</td>
+            <td style="text-align: right; padding-right: 15px;">${cov[3]}</td>
+            <td style="text-align: right; padding-right: 15px;">${cov[4]}</td>
+        `;
+        tbody.appendChild(tr);
+    });
 }

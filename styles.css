@@ -2207,3 +2207,210 @@ h1, h2, h3 { font-weight: 700; }
     gap: 3px;
     cursor: pointer;
 }
+
+/* AI 설계 결과 팝업 */
+.ai-result-popup {
+    width: 1200px;
+    max-width: 95vw;
+    height: 800px;
+    max-height: 90vh;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.ai-result-header {
+    background: #233b69;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ai-result-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.ai-result-main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+/* Left Area: Plan Cards */
+.ai-result-left {
+    width: 380px;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.plan-result-card {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.plan-result-card:hover {
+    border-color: #f58220;
+}
+
+.plan-result-card.active {
+    border-color: #f58220;
+    box-shadow: 0 4px 10px rgba(245, 130, 32, 0.2);
+}
+
+.plan-card-header {
+    background: #eee;
+    padding: 8px 15px;
+    font-weight: 700;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+}
+
+.plan-result-card.active .plan-card-header {
+    background: #f58220;
+    color: white;
+    border-bottom-color: #f58220;
+}
+
+.plan-card-body {
+    padding: 12px 15px;
+}
+
+.plan-card-body .p-name {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.plan-card-body .p-meta {
+    font-size: 11px;
+    color: #666;
+    margin: 2px 0;
+}
+
+.plan-card-body .p-analysis {
+    font-size: 11px;
+    color: #233b69;
+    background: #eef2f7;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+
+.plan-card-body .p-total {
+    margin-top: 10px;
+    font-weight: 700;
+    color: #004ea1;
+    font-size: 14px;
+    text-align: right;
+}
+
+/* Right Area: Coverage Details */
+.ai-result-right {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: white;
+}
+
+.detail-top-info {
+    border: 2px solid #f58220;
+    padding: 12px 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.detail-prod-name {
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 0 5px 0;
+}
+
+.detail-prod-meta {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+}
+
+.detail-table-container {
+    flex: 1;
+    border: 1px solid #ddd;
+    overflow-y: auto;
+}
+
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.detail-table th {
+    background: #f1f3f5;
+    padding: 8px;
+    border: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+}
+
+.detail-table td {
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.detail-table td.text-left {
+    text-align: left;
+}
+
+.detail-bottom-summary {
+    background: #f58220;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+}
+
+.detail-bottom-summary .detail-summary-item {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: default;
+    color: white;
+}
+
+.detail-bottom-summary .highlight {
+    font-size: 16px;
+}
+
+.detail-footer-note {
+    font-size: 11px;
+    color: #233b69;
+    margin-top: 8px;
+}
+
+.ai-result-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background: #f8f9fa;
+}
+

@@ -59,7 +59,7 @@
                         <div class="grade-select-wrapper">
                             <label for="grade-input" class="grade-label">급수</label>
                             <select id="grade-input" class="grade-select">
-                                <option value="" selected disabled>선택</option>
+                                <option value="" selected>선택</option>
                                 <option value="1">1급</option>
                                 <option value="2">2급</option>
                                 <option value="3">3급</option>
@@ -201,7 +201,7 @@
                 <div class="bottom-left">
                     <div class="card side-panel flex-grow">
                         <div class="card-header accent">
-                            <h3>인수가능 상품 순위 (바로컨설팅)</h3>
+                            <h3>인수가능 상품 유형 (바로컨설팅)</h3>
                         </div>
                         <ul id="product-list" class="styled-list">
                             <!-- Populated by JS -->
@@ -1087,6 +1087,90 @@
             <span class="material-symbols-outlined loading-spinner" style="font-size: 48px; color: var(--primary);">hourglass_top</span>
             <div class="loading-text">AI 설계 진행 중...</div>
             <div class="loading-subtext">최적의 플랜을 분석하고 있습니다. 잠시만 기다려주세요.</div>
+        </div>
+    </div>
+
+    <!-- AI 설계 결과 상세 팝업 -->
+    <div id="ai-result-modal" class="modal">
+        <div class="modal-content ai-result-popup">
+            <div class="ai-result-header">
+                <h2>4-1. 설계 결과</h2>
+                <button id="ai-result-close-x" class="specs-close-x">&times;</button>
+            </div>
+            
+            <div class="ai-result-main">
+                <!-- Left Sidebar: Options -->
+                <div class="ai-result-left">
+                    <div id="plan-option-1" class="plan-result-card active" onclick="switchResultTab(1)">
+                        <div class="plan-card-header">I. 고객 맞춤 (유사고객)</div>
+                        <div class="plan-card-body">
+                            <p class="p-name">간편한3.10.10건강보험(세만기형)</p>
+                            <p class="p-meta">설계번호 : L026 08701817</p>
+                            <p class="p-meta">30년납 / 30년만기 / 연만기 / 해약환급금미지급형</p>
+                            <p class="p-analysis">기왕력 분석 결과 : 질병유사도 95% / 주요질병 : XX, XX</p>
+                            <div class="p-total">[ 합계보험료 ] 150,000 원</div>
+                        </div>
+                    </div>
+                    <div id="plan-option-2" class="plan-result-card" onclick="switchResultTab(2)">
+                        <div class="plan-card-header">II. 우수설계 따라하기</div>
+                        <div class="plan-card-body">
+                            <p class="p-name">내삶엔(3N)맞춤건강보험(세만기형)</p>
+                            <p class="p-meta">설계번호 : L026 10815948</p>
+                            <p class="p-meta">30년납 / 30년만기 / 연만기 / 해약환급금미지급형</p>
+                            <p class="p-analysis">설계성향 분석 결과 : 설계유사도 88% / 주요담보 : XX, XX</p>
+                            <div class="p-total">[ 합계보험료 ] 100,000 원</div>
+                        </div>
+                    </div>
+                    <div id="plan-option-3" class="plan-result-card" onclick="switchResultTab(3)">
+                        <div class="plan-card-header">III. 최신트렌드</div>
+                        <div class="plan-card-body">
+                            <p class="p-name">내삶엔(3N)맞춤건강보험(세만기형)</p>
+                            <p class="p-meta">설계번호 : L026 11250053</p>
+                            <p class="p-meta">30년납 / 30년만기 / 연만기 / 해약환급금미지급형</p>
+                            <p class="p-analysis">설계성향 분석 결과 : 설계유사도 92% / 주요담보 : XX, XX</p>
+                            <div class="p-total">[ 합계보험료 ] 70,000 원</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Details -->
+                <div class="ai-result-right">
+                    <div class="detail-top-info">
+                        <p class="detail-prod-name">상품명 : <span id="detail-prod-name-span">간편한3.10.10건강보험(세만기형)(Hi2601)(간편건강고지)</span></p>
+                        <p class="detail-prod-meta">30년납 / 30년만기 / 연만기 / 해약환급금미지급형</p>
+                    </div>
+                    
+                    <div class="detail-table-container">
+                        <table class="detail-table">
+                            <thead>
+                                <tr>
+                                    <th width="40">구분</th>
+                                    <th>담보명</th>
+                                    <th width="100">납기/만기</th>
+                                    <th width="90">가입금액(만원)</th>
+                                    <th width="80">보험료(원)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detail-coverage-tbody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="detail-bottom-summary">
+                        <div class="detail-summary-item">계약번호 : <span id="detail-plan-id">L026 08701817</span></div>
+                        <div class="detail-summary-item highlight">납입보험료 : <span id="detail-premium">150,000</span> 원</div>
+                    </div>
+                    <p class="detail-footer-note">※ 가심사 결과는 참고용이며, 실제 가입 여부 및 조건은 정식 심사 결과에 따라 달라질 수 있습니다.</p>
+                </div>
+            </div>
+
+            <div class="ai-result-footer">
+                <button class="btn btn-primary" style="background: #233b69;">플랜 비교하기</button>
+                <button class="btn btn-primary" style="background: #f58220;">누적시뮬레이션</button>
+                <button class="btn btn-primary" style="background: #f58220;">인수심사보기</button>
+                <button id="ai-result-close-btn" class="btn btn-secondary">닫기</button>
+            </div>
         </div>
     </div>
 
