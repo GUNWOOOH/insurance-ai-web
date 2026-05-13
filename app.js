@@ -518,16 +518,13 @@ function submitCustomDesign() {
 
 function showLoadingOverlay(callback) {
     const overlay = document.getElementById('ai-loading-overlay');
+    const steps = [1,2,3,4,5,6].map(n => document.getElementById(`step-${n}`));
     
-    // Stepper logic - Start (설계 중)
-    const s1 = document.getElementById('step-1');
-    const s2 = document.getElementById('step-2');
-    const s3 = document.getElementById('step-3');
+    // Reset all steps to default
+    steps.forEach(s => {
+        if(s) s.className = 'step-box';
+    });
     
-    if (s1) s1.className = 'step active';
-    if (s2) s2.className = 'step active highlight';
-    if (s3) s3.className = 'step';
-
     if (!overlay) {
         if(callback) callback();
         return;
@@ -538,26 +535,36 @@ function showLoadingOverlay(callback) {
         overlay.classList.add('show');
     }, 10);
 
+    // Sequence timing: Animate through steps
+    const stepDuration = 500; // ms per step
+    steps.forEach((s, idx) => {
+        setTimeout(() => {
+            // Previous step becomes active (yellow)
+            if (idx > 0) {
+                steps[idx-1].className = 'step-box active';
+            }
+            // Current step becomes highlighted (orange)
+            if (s) s.className = 'step-box highlight';
+        }, idx * stepDuration);
+    });
+
     setTimeout(() => {
         overlay.classList.remove('show');
+        // Final state: all steps active except maybe the last one stays highlighted or all active
+        steps.forEach(s => { if(s) s.className = 'step-box active'; });
         
-        // Stepper logic - Complete (설계 완료)
-        if (s2) s2.className = 'step active';
-        if (s3) s3.className = 'step active highlight';
-
         setTimeout(() => {
             overlay.style.display = 'none';
             if(callback) callback();
         }, 300);
-    }, 2000);
+    }, (steps.length * stepDuration) + 500);
 }
 
 function resetStepper() {
-    const steps = document.querySelectorAll('.step');
+    const steps = document.querySelectorAll('.step-box');
     steps.forEach((step, index) => {
-        step.className = 'step';
-        if (index <= 2) step.classList.add('active', 'highlight');
-        if (index === 0) step.classList.remove('highlight');
+        step.className = 'step-box';
+        if (index === 0) step.classList.add('active', 'highlight');
     });
 }
 
