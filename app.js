@@ -154,6 +154,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // AI Specs Modal button
     document.getElementById('btn-ai-specs').addEventListener('click', showAiSpecsModal);
     document.getElementById('ai-specs-close-x').addEventListener('click', hideAiSpecsModal);
+    
+    // My Plan Modal buttons
+    document.getElementById('btn-import-plan').addEventListener('click', () => {
+        const type = document.querySelector('input[name="import_type"]:checked')?.value;
+        if (type === '내 설계 불러오기') {
+            showMyPlanModal();
+        } else {
+            showAlert("안내", "해당 기능은 준비 중입니다.");
+        }
+    });
+    document.getElementById('my-plan-close-x').addEventListener('click', hideMyPlanModal);
 
 
     // 태아보험 라디오 토글
@@ -812,4 +823,44 @@ function showAiSpecsModal() {
 
 function hideAiSpecsModal() {
     document.getElementById('ai-specs-modal').classList.remove('show');
+}
+
+function showMyPlanModal() {
+    const tbody = document.getElementById('my-plan-tbody');
+    tbody.innerHTML = '';
+    
+    const mockData = [
+        { prod: "굿앤굿스타종합보험(hi2603)", id: "L026 11379888", contractor: "김현대", insured: "김현대", silson: "예정", silson2: "☑", period: "20년납/100세만기", status: "확정요청", premium: "81,780", mult: "32.7", scan: "☑", wanpan: "☑", sign: "☑", recruit: "☑" },
+        { prod: "굿앤굿스타종합보험(hi2603)", id: "L026 11376101", contractor: "김현대", insured: "김현대", silson: "예정", silson2: "☑", period: "20년납/100세만기", status: "심사중", premium: "100,230", mult: "25.4", scan: "☑", wanpan: "☑", sign: "☑", recruit: "☑" },
+        { prod: "퍼펙트플러스종합보험", id: "L026 12133179", contractor: "이연희", insured: "이연희", silson: "-", silson2: "☐", period: "20년납/100세만기", status: "가입설계", premium: "83,770", mult: "14.3", scan: "☐", wanpan: "☐", sign: "☐", recruit: "☐" },
+        { prod: "간편한3.10.10건강보험", id: "L026 10034717", contractor: "홍해상", insured: "홍해상", silson: "-", silson2: "☐", period: "20년납/90세만기", status: "확정대상", premium: "487,500", mult: "13.6", scan: "☑", wanpan: "☑", sign: "☐", recruit: "☑" }
+    ];
+
+    mockData.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="checkbox"></td>
+            <td class="text-left">${item.prod}</td>
+            <td>${item.id}</td>
+            <td>${item.contractor}</td>
+            <td>${item.insured}</td>
+            <td>${item.silson}</td>
+            <td>${item.silson2}</td>
+            <td>${item.period}</td>
+            <td>${item.status}</td>
+            <td style="text-align: right; padding-right: 8px;">${item.premium}</td>
+            <td>${item.mult}</td>
+            <td>${item.scan}</td>
+            <td>${item.wanpan}</td>
+            <td>${item.sign}</td>
+            <td>${item.recruit}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    document.getElementById('my-plan-modal').classList.add('show');
+}
+
+function hideMyPlanModal() {
+    document.getElementById('my-plan-modal').classList.remove('show');
 }

@@ -180,7 +180,7 @@
                             <input type="radio" name="import_type" value="추천설계 불러오기">
                             <span class="radio-label">추천설계 불러오기 (지역/사업부)</span>
                         </label>
-                        <button class="btn btn-secondary mt-auto">진행</button>
+                        <button id="btn-import-plan" class="btn btn-secondary mt-auto">진행</button>
                     </div>
                 </div>
             </div>
@@ -810,6 +810,116 @@
                         </tr>
                     </thead>
                     <tbody id="ai-specs-tbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 내 설계 불러오기 팝업 -->
+    <div id="my-plan-modal" class="modal">
+        <div class="modal-content my-plan-popup">
+            <div class="my-plan-header">
+                <h2>내 설계플랜 불러오기 (기존 나의 가입설계명세)</h2>
+                <button id="my-plan-close-x" class="specs-close-x">&times;</button>
+            </div>
+            
+            <div class="my-plan-tabs">
+                <div class="mp-tab">자동차</div>
+                <div class="mp-tab active">장기</div>
+                <div class="mp-tab">일반</div>
+            </div>
+
+            <div class="my-plan-filter-area">
+                <div class="mp-filter-row">
+                    <div class="filter-group">
+                        <span class="filter-label">업무구분</span>
+                        <label class="radio-label-inline"><input type="radio" name="mp_work_type" checked> 가입설계</label>
+                        <label class="radio-label-inline"><input type="radio" name="mp_work_type"> 변경설계</label>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">조회구분</span>
+                        <select class="filter-select"><option>계약담당자</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">사원번호</span>
+                        <div class="filter-input-wrap">
+                            <input type="text" class="filter-input-text" value="1A3085" style="width: 80px;">
+                            <button class="filter-icon-btn"><span class="material-symbols-outlined" style="font-size: 14px;">search</span></button>
+                        </div>
+                        <input type="text" class="filter-input-text" value="이연희" style="width: 80px; margin-left: 5px;">
+                        <input type="text" class="filter-input-text" value="399200" style="width: 80px; margin-left: 5px;">
+                        <input type="text" class="filter-input-text" value="대전TC지점" style="width: 120px; margin-left: 5px;">
+                        <label class="check-label-inline" style="margin-left: 10px;"><input type="checkbox" checked> 사용인포함</label>
+                    </div>
+                </div>
+                
+                <div class="mp-filter-row">
+                    <div class="filter-group">
+                        <span class="filter-label">대상기간</span>
+                        <select class="filter-select"><option>설계보관일</option></select>
+                        <input type="date" value="2026-04-14" class="filter-date-input"> ~
+                        <input type="date" value="2026-04-14" class="filter-date-input">
+                        <div class="filter-btn-group" style="display: flex; gap: 2px;">
+                            <button class="btn-filter-small">오늘</button>
+                            <button class="btn-filter-small">전일</button>
+                            <button class="btn-filter-small">1주일</button>
+                            <button class="btn-filter-small">당월</button>
+                            <button class="btn-filter-small">전월</button>
+                        </div>
+                    </div>
+                    <div class="filter-group" style="margin-left: 20px;">
+                        <span class="filter-label" style="background: #f58220; color: white;">상품조회</span>
+                        <input type="text" class="filter-input-text" style="width: 250px;">
+                    </div>
+                    <button class="btn-filter-action" style="margin-left: auto;">초기화</button>
+                </div>
+
+                <div class="mp-filter-row">
+                    <div class="filter-group">
+                        <span class="filter-label">설계상태</span>
+                        <label class="check-label-inline"><input type="checkbox" checked> 전체</label>
+                        <label class="check-label-inline"><input type="checkbox"> 확정대상</label>
+                        <label class="check-label-inline"><input type="checkbox"> 확정요청</label>
+                        <label class="check-label-inline"><input type="checkbox"> 심사중</label>
+                        <label class="check-label-inline"><input type="checkbox"> 기타설계</label>
+                    </div>
+                    <div class="filter-group" style="margin-left: 20px;">
+                        <span class="filter-label">결과내조회</span>
+                        <select class="filter-select"><option>선택하세요</option></select>
+                        <input type="text" class="filter-input-text" style="width: 150px;">
+                        <button class="btn-filter-action">초기화</button>
+                    </div>
+                    <div class="mp-action-btns" style="margin-left: auto; display: flex; gap: 5px;">
+                        <button class="btn-filter-action">초기화</button>
+                        <button class="btn-filter-action orange">조회</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mp-table-container">
+                <table class="mp-table">
+                    <thead>
+                        <tr>
+                            <th width="30"><input type="checkbox"></th>
+                            <th width="200">상품명</th>
+                            <th width="100">설계번호</th>
+                            <th width="70">계약자</th>
+                            <th width="70">피보험자</th>
+                            <th width="90">실손동시<br>가입예정</th>
+                            <th width="70">착한실손</th>
+                            <th width="160">보험기간</th>
+                            <th width="100">설계진행상태</th>
+                            <th width="90">보험료(원)</th>
+                            <th width="60">하이캡<br>배수</th>
+                            <th width="60">스캔여부</th>
+                            <th width="60">완판여부</th>
+                            <th width="60">전자서명</th>
+                            <th width="60">모집저서</th>
+                        </tr>
+                    </thead>
+                    <tbody id="my-plan-tbody">
                         <!-- Populated by JS -->
                     </tbody>
                 </table>
