@@ -208,6 +208,12 @@ function hideModal() {
 
 function lookupCustomer() {
     const rrn = rrnInput.value.trim();
+    const grade = document.getElementById('grade-input').value;
+    
+    if (!grade) {
+        showAlert("안내", "급수를 선택해주세요.");
+        return;
+    }
     
     // 가설계 판별: "900101-1" 또는 "9001011" 형태 (6자리 생년월일 + 성별 1자리)
     const prelimMatch = rrn.match(/^(\d{6})-?([12])$/);
@@ -873,10 +879,10 @@ function showRecommendedPlanModal() {
     tbody.innerHTML = '';
     
     const mockData = [
-        { prod: "퍼펙트플러스종합보험", id: "L026 88721092", designer: "장베테랑", theme: "베테랑 추천", insured: "김현대", period: "20년납/100세만기", premium: "125,000", mult: "18.5", reason: "강남사업부 1위 설계사 최다 추천 플랜" },
-        { prod: "간편한3.10.10건강보험", id: "L026 77612093", designer: "이우수", theme: "지점 트렌드", insured: "김현대", period: "20년납/90세만기", premium: "98,000", mult: "22.1", reason: "최근 1개월 지점 내 최다 판매 상품 구성" },
-        { prod: "굿앤굿스타종합보험(hi2603)", id: "L026 99012345", designer: "박지점", theme: "우수 플래너", insured: "김현대", period: "20년납/100세만기", premium: "110,200", mult: "15.7", reason: "질병 유사도 95% 고객군 타겟 우수 설계" },
-        { prod: "뉴하이카운전자보험", id: "L026 55432109", designer: "최관리", theme: "FM팀장추천", insured: "김현대", period: "20년납/20년만기", premium: "25,000", mult: "35.2", reason: "운전자 필수 담보 최적화 플랜" }
+        { prod: "퍼펙트플러스종합보험", id: "L026 88721092", designer: "장베테랑", theme: "지점장추천", insured: "김현대", period: "20년납/100세만기", premium: "125,000", reason: "지점 내 우수 설계 사례로 선정된 최적화 플랜" },
+        { prod: "간편한3.10.10건강보험", id: "L026 77612093", designer: "이우수", theme: "지역단추천", insured: "김현대", period: "20년납/90세만기", premium: "98,000", reason: "지역단 내 유병자 상품 판매 활성화 우수 플랜" },
+        { prod: "굿앤굿스타종합보험(hi2603)", id: "L026 99012345", designer: "박지점", theme: "본사추천", insured: "김현대", period: "20년납/100세만기", premium: "110,200", reason: "본사 상품전략파트 추천 표준 가이드 플랜" },
+        { prod: "뉴하이카운전자보험", id: "L026 55432109", designer: "최관리", theme: "지점장추천", insured: "김현대", period: "20년납/20년만기", premium: "25,000", reason: "운전자 필수 담보 중심의 지점장 추천 플랜" }
     ];
 
     mockData.forEach(item => {
@@ -889,7 +895,6 @@ function showRecommendedPlanModal() {
             <td>${item.insured}</td>
             <td>${item.period}</td>
             <td style="text-align: right; padding-right: 8px;">${item.premium}</td>
-            <td>${item.mult}</td>
             <td class="text-left" style="color: #666;">${item.reason}</td>
             <td><button class="btn-filter-small orange" style="padding: 2px 8px;">선택</button></td>
         `;
