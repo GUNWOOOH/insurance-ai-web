@@ -28,11 +28,7 @@ const CUSTOMERS = {
             "퍼펙트종합(10년고지)",
             "내삶N(3.9.9.9)"
         ],
-        plans: [
-            ["AI", "고객 개인화 추천", 1, "고객명", generatePlanId(), "표준 2Q PASS", "2026-05-15", "80,160", "20.8", "할증, 부담보", ""],
-            ["AI", "베테랑 설계 따라하기", 2, "고객명", generatePlanId(), "퍼펙트 종합(10년고지)", "2026-05-15", "166,900", "14.5", "정상", ""],
-            ["AI", "우리 지점 트렌드", 3, "고객명", generatePlanId(), "내삶엔 3.9.9.9", "2026-05-15", "151,950", "19.7", "누적조정", "메모"]
-        ]
+        plans: []
     },
     "900101-1000000": {
         name: "이샘플",
@@ -59,11 +55,7 @@ const CUSTOMERS = {
             "실속 간편플랜",
             "표준 건강플랜"
         ],
-        plans: [
-            ["AI", "고객 개인화 추천", 1, "이샘플", generatePlanId(), "원클릭 종합", "2026-05-07", "74,300", "15.2", "정상", ""],
-            ["AI", "베테랑 설계 따라하기", 2, "이샘플", generatePlanId(), "실속 간편", "2026-05-07", "99,100", "13.8", "정상", ""],
-            ["AI", "우리 지점 트렌드", 3, "이샘플", generatePlanId(), "운전자 결합", "2026-05-07", "121,500", "11.2", "부담보", "메모"]
-        ]
+        plans: []
     }
 };
 
@@ -181,6 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-import-ai-request').addEventListener('click', handleImportAiRequest);
     document.getElementById('btn-recommended-ai-request').addEventListener('click', handleRecommendedAiRequest);
+    
+    document.getElementById('btn-cumulative-sim').addEventListener('click', showSimModal);
+    document.getElementById('btn-underwriting-view').addEventListener('click', showAuditModal);
+    document.getElementById('btn-compare-plans').addEventListener('click', showCompareModal);
 });
 
 function showScreen(screenNum) {
@@ -291,6 +287,8 @@ function applyPreliminaryMode(isPrelim) {
     const customOption = document.getElementById('custom-ai-option');
     const oneClickRadio = document.querySelector('input[value="원클릭AI설계(종합보험)"]');
     
+    const productsCard = document.querySelector('.bottom-left');
+    
     if (isPrelim) {
         // 맞춤 AI설계 활성화 (가설계 모드에서도 가능하도록 변경)
         customRadio.disabled = false;
@@ -299,6 +297,9 @@ function applyPreliminaryMode(isPrelim) {
         
         // 스크린 타이틀 변경
         screenTitle.innerText = "2. 설계 요청(가설계고객)";
+        
+        // 인수가능 상품 유형 숨기기
+        if (productsCard) productsCard.style.display = 'none';
     } else {
         // 맞춤 AI설계 활성화
         customRadio.disabled = false;
@@ -306,6 +307,9 @@ function applyPreliminaryMode(isPrelim) {
         oneClickRadio.checked = true;
         
         screenTitle.innerText = "2. 설계 요청(동의고객)";
+        
+        // 인수가능 상품 유형 보이기
+        if (productsCard) productsCard.style.display = 'flex';
     }
 }
 
@@ -385,9 +389,20 @@ function runAiDesign() {
         return;
     }
     
-    // 원클릭 AI설계: 로딩 후 플랜 표시 및 결과 상세 팝업 오픈
+    // 원클릭 AI설계: 3개 모델 결과 생성 후 누적 추가
     showLoadingOverlay(() => {
+        const today = new Date();
+        const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+        
+        const newPlans = [
+            ["AI", "고객 개인화 추천", currentCustomer.plans.length + 1, currentCustomer.name, generatePlanId(), "표준 2Q PASS", dateStr, "80,160", "20.8", "할증, 부담보", ""],
+            ["AI", "베테랑 설계 따라하기", currentCustomer.plans.length + 2, currentCustomer.name, generatePlanId(), "퍼펙트 종합(10년고지)", dateStr, "166,900", "14.5", "정상", ""],
+            ["AI", "우리 지점 트렌드", currentCustomer.plans.length + 3, currentCustomer.name, generatePlanId(), "내삶엔 3.9.9.9", dateStr, "151,950", "19.7", "누적조정", ""]
+        ];
+
+        currentCustomer.plans.push(...newPlans);
         renderPlans(currentCustomer.plans);
+        updateAiResultPopupCards(newPlans);
         showAiResultModal();
     });
 }
@@ -413,32 +428,56 @@ function generatePreliminaryPlans(type) {
         ];
     }
     
-    currentCustomer.plans = plans;
+    const newPlans = plans;
+    currentCustomer.plans.push(...newPlans);
     showLoadingOverlay(() => {
-        renderPlans(plans);
-        updateAiResultPopupCards(plans);
+        renderPlans(currentCustomer.plans);
+        updateAiResultPopupCards(newPlans);
         showAiResultModal();
     });
 }
 
 function renderPlans(plans) {
     planTbody.innerHTML = '';
-    plans.forEach(plan => {
+    window.selectedPlanIndices = window.selectedPlanIndices || [];
+    
+    plans.forEach((plan, idx) => {
         const tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        
+        if (window.selectedPlanIndices.includes(idx)) {
+            tr.classList.add('selected-row');
+        }
+
+        tr.onclick = () => {
+            const currentIdx = window.selectedPlanIndices.indexOf(idx);
+            if (currentIdx > -1) {
+                // Deselect
+                window.selectedPlanIndices.splice(currentIdx, 1);
+                tr.classList.remove('selected-row');
+            } else {
+                // Select
+                if (window.selectedPlanIndices.length >= 5) {
+                    showAlert("안내", "최대 5개 플랜까지만 비교 가능합니다.");
+                    return;
+                }
+                window.selectedPlanIndices.push(idx);
+                tr.classList.add('selected-row');
+            }
+        };
+        
         let html = '';
-        plan.forEach((item, idx) => {
-            if (idx === 9) {
+        plan.forEach((item, pIdx) => {
+            if (pIdx === 9) {
                 let color = '#28a745';
                 if (item.includes('부담보') || item.includes('할증')) color = '#dc3545';
                 else if (item.includes('조정')) color = '#fd7e14';
                 else if (item.includes('가심사')) color = '#9b59b6';
                 html += `<td><span style="color: ${color}; font-weight: 600;">${item}</span></td>`;
-            } else if (idx === 1) {
-                html += `<td><a class="plan-link" onclick='showPlanDetail(${JSON.stringify(plan).replace(/'/g, "&#39;")})'>${item}</a></td>`;
-            } else if (idx === 4) {
-                html += `<td>${item}</td>`;
+            } else if (pIdx === 1) {
+                html += `<td><a class="plan-link" onclick='event.stopPropagation(); showPlanDetail(${JSON.stringify(plan).replace(/'/g, "&#39;")})'>${item}</a></td>`;
             } else {
-                html += `<td>${item}</td>`;
+                html += `<td class="${pIdx === 7 ? 'text-right' : ''}">${item}</td>`;
             }
         });
         tr.innerHTML = html;
@@ -503,19 +542,19 @@ function submitCustomDesign() {
     else if (selectedPremium === '10~15만원') premiums = ["108,500", "125,300", "142,800"];
     else if (selectedPremium === '15만원초과') premiums = ["168,900", "185,200", "201,700"];
     
-    const plans = [
-        ["AI", "고객 개인화 추천", 1, custName, generatePlanId(), productName, dateStr, premiums[0], "17.5", "정상", ""],
-        ["AI", "베테랑 설계 따라하기", 2, custName, generatePlanId(), productName, dateStr, premiums[1], "15.2", "정상", ""],
-        ["AI", "우리 지점 트렌드", 3, custName, generatePlanId(), productName, dateStr, premiums[2], "13.8", "정상", ""]
+    const newPlans = [
+        ["AI", "고객 개인화 추천", currentCustomer.plans.length + 1, custName, generatePlanId(), productName, dateStr, premiums[0], "17.5", "정상", ""],
+        ["AI", "베테랑 설계 따라하기", currentCustomer.plans.length + 2, custName, generatePlanId(), productName, dateStr, premiums[1], "15.2", "정상", ""],
+        ["AI", "우리 지점 트렌드", currentCustomer.plans.length + 3, custName, generatePlanId(), productName, dateStr, premiums[2], "13.8", "정상", ""]
     ];
     
-    currentCustomer.plans = plans;
+    currentCustomer.plans.push(...newPlans);
     
     hideCustomDesignModal();
     
     showLoadingOverlay(() => {
-        renderPlans(plans);
-        updateAiResultPopupCards(plans);
+        renderPlans(currentCustomer.plans);
+        updateAiResultPopupCards(newPlans);
         showAiResultModal();
         
         const coverageText = selectedCoverages.length > 0 ? selectedCoverages.slice(0, 3).join(', ') + (selectedCoverages.length > 3 ? ' 외 ' + (selectedCoverages.length - 3) + '건' : '') : '기본';
@@ -637,15 +676,29 @@ function hidePlanDetailModal() {
 }
 
 function showAuditModal() {
+    // If called from dashboard action bar (not from detail/result modal)
+    const detailModal = document.getElementById('plan-detail-modal');
+    const resultModal = document.getElementById('ai-result-modal');
+    const isModalOpen = (detailModal && detailModal.classList.contains('show')) || (resultModal && resultModal.classList.contains('show'));
+
+    if (!isModalOpen) {
+        if (!window.selectedPlanIndices || window.selectedPlanIndices.length === 0) {
+            showAlert("안내", "먼저 목록에서 설계를 선택해주세요.");
+            return;
+        }
+    }
+
     // Try to get audit text from either detail modal or result modal
     const pdAudit = document.getElementById('pd-audit-result');
     let auditText = pdAudit ? pdAudit.textContent : "정상";
     
-    // If opening from result modal, we might want to use its specific data
-    const resultModal = document.getElementById('ai-result-modal');
     if (resultModal && resultModal.classList.contains('show') && !document.getElementById('plan-detail-modal').classList.contains('show')) {
         // Mock: currently 4-1 always shows a default audit for demo
         auditText = "부담보"; 
+    } else if (!isModalOpen) {
+        // Dashboard context
+        const plan = currentCustomer.plans[window.selectedPlanIndices[0]];
+        auditText = plan[9];
     }
     
     if (auditText.trim() !== "정상") {
@@ -674,8 +727,14 @@ function showSimModal() {
         planId = document.getElementById('detail-plan-id').textContent;
         productName = document.getElementById('detail-prod-name-span').textContent;
     } else {
-        planId = "L026 00000000";
-        productName = "상품정보 없음";
+        // Dashboard context
+        if (!window.selectedPlanIndices || window.selectedPlanIndices.length === 0) {
+            showAlert("안내", "먼저 목록에서 설계를 선택해주세요.");
+            return;
+        }
+        const plan = currentCustomer.plans[window.selectedPlanIndices[0]];
+        planId = plan[4];
+        productName = plan[5];
     }
 
     const custName = currentCustomer ? currentCustomer.name : '고객명';
@@ -696,22 +755,33 @@ function hideSimModal() {
 }
 
 function showCompareModal() {
-    if (!currentCustomer || !currentCustomer.plans || currentCustomer.plans.length === 0) {
-        showAlert("안내", "AI 설계 결과가 없습니다. 먼저 AI 설계를 진행해주세요.");
-        return;
+    let plans = [];
+    const isDashboard = !document.getElementById('ai-result-modal').classList.contains('show');
+
+    if (isDashboard) {
+        if (!window.selectedPlanIndices || window.selectedPlanIndices.length < 2) {
+            showAlert("안내", "비교할 플랜을 2개 이상 선택해주세요. (최대 5개)");
+            return;
+        }
+        plans = window.selectedPlanIndices.map(idx => currentCustomer.plans[idx]);
+    } else {
+        if (!currentCustomer || !currentCustomer.plans || currentCustomer.plans.length === 0) {
+            showAlert("안내", "AI 설계 결과가 없습니다. 먼저 AI 설계를 진행해주세요.");
+            return;
+        }
+        plans = currentCustomer.plans;
     }
 
-    const plans = currentCustomer.plans;
     const thead = document.getElementById('compare-thead');
     const tbody = document.getElementById('compare-tbody');
 
     // Build thead
-    let trHead = '<tr><th style="width:25%;">구분 (담보명)</th>';
+    let trHead = `<tr><th style="width:${100/(plans.length+1)}%;">구분 (담보명)</th>`;
     plans.forEach((plan, idx) => {
         const planId = plan[4];
         const productName = plan[5];
         trHead += `
-            <th>
+            <th style="width:${100/(plans.length+1)}%;">
                 <div class="plan-header">
                     <span class="plan-name">${productName}</span>
                     <span class="plan-id">${planId}</span>
@@ -1131,3 +1201,4 @@ function showConsentModal() {
 function hideConsentModal() {
     document.getElementById('consent-modal').classList.remove('show');
 }
+
