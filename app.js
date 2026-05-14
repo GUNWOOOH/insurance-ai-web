@@ -370,16 +370,16 @@ function runAiDesign() {
         return;
     }
     
-    // 가설계 모드면 유형 선택 모달 표시
-    if (isPreliminary) {
-        showTypeSelectModal();
-        return;
-    }
-
     // 맞춤 AI설계 선택되었는지 확인
     const designType = document.querySelector('input[name="design_type"]:checked');
     if (designType && designType.value === '맞춤 AI설계') {
         showCustomDesignModal();
+        return;
+    }
+
+    // 가설계 모드면 유형 선택 모달 표시
+    if (isPreliminary) {
+        showTypeSelectModal();
         return;
     }
     
@@ -414,6 +414,8 @@ function generatePreliminaryPlans(type) {
     currentCustomer.plans = plans;
     showLoadingOverlay(() => {
         renderPlans(plans);
+        updateAiResultPopupCards(plans);
+        showAiResultModal();
     });
 }
 
@@ -511,6 +513,9 @@ function submitCustomDesign() {
     
     showLoadingOverlay(() => {
         renderPlans(plans);
+        updateAiResultPopupCards(plans);
+        showAiResultModal();
+        
         const coverageText = selectedCoverages.length > 0 ? selectedCoverages.slice(0, 3).join(', ') + (selectedCoverages.length > 3 ? ' 외 ' + (selectedCoverages.length - 3) + '건' : '') : '기본';
         showAlert("맞춤 AI 설계 완료", `[${productName}] 기준\n보험료: ${selectedPremium}\n주요담보: ${coverageText}\n\n3개의 맞춤 설계안이 생성되었습니다.`);
     });
@@ -950,6 +955,28 @@ function hideAiResultModal() {
     document.getElementById('ai-result-modal').classList.remove('show');
 }
 
+function updateAiResultPopupCards(plans) {
+    plans.forEach((plan, idx) => {
+        const tabNum = idx + 1;
+        const card = document.getElementById(`plan-option-${tabNum}`);
+        if (!card) return;
+
+        const nameEl = card.querySelector('.p-name');
+        const idEl = card.querySelector('.p-meta:nth-child(2)');
+        const totalEl = card.querySelector('.p-total');
+        const analysisEl = card.querySelector('.p-analysis');
+
+        if (nameEl) nameEl.innerText = plan[5]; // productName
+        if (idEl) idEl.innerText = `설계번호 : ${plan[4]}`; // planId
+        if (totalEl) totalEl.innerText = `[ 합계보험료 ] ${plan[7]} 원`; // premium
+        if (analysisEl) {
+            const theme = plan[1];
+            const score = plan[8];
+            analysisEl.innerText = `${theme} 분석 결과 : 유사도 ${score}% / 주요담보 : XX, XX`;
+        }
+    });
+}
+
 function switchResultTab(tabNum) {
     // 카드 활성화 상태 업데이트
     document.querySelectorAll('.plan-result-card').forEach(card => card.classList.remove('active'));
@@ -961,18 +988,25 @@ function switchResultTab(tabNum) {
     const premiumSpan = document.getElementById('detail-premium');
     const tbody = document.getElementById('detail-coverage-tbody');
 
-    if (tabNum === 1) {
-        prodNameSpan.innerText = "간편한3.10.10건강보험(세만기형)(Hi2601)(간편건강고지)";
-        planIdSpan.innerText = "L026 08701817";
-        premiumSpan.innerText = "150,000";
-    } else if (tabNum === 2) {
-        prodNameSpan.innerText = "내삶엔(3N)맞춤건강보험(세만기형)(Hi2601)1종(표준형)";
-        planIdSpan.innerText = "L026 10815948";
-        premiumSpan.innerText = "100,000";
+    if (currentCustomer && currentCustomer.plans && currentCustomer.plans.length >= tabNum) {
+        const plan = currentCustomer.plans[tabNum - 1];
+        prodNameSpan.innerText = plan[5];
+        planIdSpan.innerText = plan[4];
+        premiumSpan.innerText = plan[7];
     } else {
-        prodNameSpan.innerText = "내삶엔(3N)맞춤건강보험(세만기형)(Hi2601)2종(해약환급금미지급형)";
-        planIdSpan.innerText = "L026 11250053";
-        premiumSpan.innerText = "70,000";
+        if (tabNum === 1) {
+            prodNameSpan.innerText = "간편한3.10.10건강보험(세만기형)(Hi2601)(간편건강고지)";
+            planIdSpan.innerText = "L026 08701817";
+            premiumSpan.innerText = "150,000";
+        } else if (tabNum === 2) {
+            prodNameSpan.innerText = "내삶엔(3N)맞춤건강보험(세만기형)(Hi2601)1종(표준형)";
+            planIdSpan.innerText = "L026 10815948";
+            premiumSpan.innerText = "100,000";
+        } else {
+            prodNameSpan.innerText = "내삶엔(3N)맞춤건강보험(세만기형)(Hi2601)2종(해약환급금미지급형)";
+            planIdSpan.innerText = "L026 11250053";
+            premiumSpan.innerText = "70,000";
+        }
     }
 
     // 담보 상세 데이터 생성
