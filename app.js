@@ -178,6 +178,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('prenatal-options').style.display = (e.target.value === '태아보험') ? 'block' : 'none';
         });
     });
+
+    document.getElementById('btn-import-ai-request').addEventListener('click', handleImportAiRequest);
+    document.getElementById('btn-recommended-ai-request').addEventListener('click', handleRecommendedAiRequest);
 });
 
 function showScreen(screenNum) {
@@ -882,6 +885,14 @@ function showMyPlanModal() {
 
     mockData.forEach(item => {
         const tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        tr.onclick = () => {
+            tbody.querySelectorAll('tr').forEach(r => r.classList.remove('selected-row'));
+            tr.classList.add('selected-row');
+            const checkbox = tr.querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.checked = true;
+            window.selectedImportPlan = item;
+        };
         tr.innerHTML = `
             <td><input type="checkbox"></td>
             <td class="text-left">${item.prod}</td>
@@ -902,7 +913,31 @@ function showMyPlanModal() {
         tbody.appendChild(tr);
     });
 
+    window.selectedImportPlan = null;
     document.getElementById('my-plan-modal').classList.add('show');
+}
+
+function handleImportAiRequest() {
+    if (!window.selectedImportPlan) {
+        showAlert("안내", "먼저 목록에서 설계안을 선택해주세요.");
+        return;
+    }
+
+    const item = window.selectedImportPlan;
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    
+    // Create new plan based on selection
+    const newPlan = ["AI", "내 설계 불러오기", currentCustomer.plans.length + 1, currentCustomer.name, generatePlanId(), item.prod, dateStr, item.premium, "100", "정상", ""];
+    
+    currentCustomer.plans.push(newPlan);
+    
+    hideMyPlanModal();
+    
+    showLoadingOverlay(() => {
+        renderPlans(currentCustomer.plans);
+        showAlert("불러오기 완료", `[${item.prod}] 설계가 목록에 추가되었습니다.`);
+    });
 }
 
 function hideMyPlanModal() {
@@ -922,6 +957,12 @@ function showRecommendedPlanModal() {
 
     mockData.forEach(item => {
         const tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        tr.onclick = () => {
+            tbody.querySelectorAll('tr').forEach(r => r.classList.remove('selected-row'));
+            tr.classList.add('selected-row');
+            window.selectedRecommendedPlan = item;
+        };
         tr.innerHTML = `
             <td class="text-left">${item.prod}</td>
             <td>${item.id}</td>
@@ -930,13 +971,38 @@ function showRecommendedPlanModal() {
             <td>${item.insured}</td>
             <td>${item.period}</td>
             <td style="text-align: right; padding-right: 8px;">${item.premium}</td>
+            <td>22.4</td>
             <td class="text-left" style="color: #666;">${item.reason}</td>
             <td><button class="btn-filter-small orange" style="padding: 2px 8px;">선택</button></td>
         `;
         tbody.appendChild(tr);
     });
 
+    window.selectedRecommendedPlan = null;
     document.getElementById('recommended-plan-modal').classList.add('show');
+}
+
+function handleRecommendedAiRequest() {
+    if (!window.selectedRecommendedPlan) {
+        showAlert("안내", "먼저 목록에서 설계안을 선택해주세요.");
+        return;
+    }
+
+    const item = window.selectedRecommendedPlan;
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    
+    // Create new plan based on selection
+    const newPlan = ["AI", "추천설계 불러오기", currentCustomer.plans.length + 1, currentCustomer.name, generatePlanId(), item.prod, dateStr, item.premium, "100", "정상", ""];
+    
+    currentCustomer.plans.push(newPlan);
+    
+    hideRecommendedPlanModal();
+    
+    showLoadingOverlay(() => {
+        renderPlans(currentCustomer.plans);
+        showAlert("불러오기 완료", `[${item.prod}] 설계가 목록에 추가되었습니다.`);
+    });
 }
 
 function hideRecommendedPlanModal() {

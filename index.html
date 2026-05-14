@@ -128,7 +128,7 @@
 
         <!-- Screen 2: Dashboard -->
         <section id="screen2" class="screen">
-            <div class="top-panels">
+            <div class="dashboard-top-section">
                 <!-- Customer Card -->
                 <div class="dashboard-card customer-card card">
                     <div class="card-header solid">
@@ -152,14 +152,16 @@
                         <h3>AI 맞춤 설계 의뢰하기</h3>
                     </div>
                     <div class="card-body flex-col">
-                        <label class="radio-option">
-                            <input type="radio" name="design_type" value="원클릭AI설계(종합보험)" checked>
-                            <span class="radio-label">원클릭AI설계 (종합보험)</span>
-                        </label>
-                        <label class="radio-option" id="custom-ai-option">
-                            <input type="radio" name="design_type" value="맞춤 AI설계" id="custom-ai-radio">
-                            <span class="radio-label">맞춤 AI설계</span>
-                        </label>
+                        <div class="ai-request-options">
+                            <label class="radio-option">
+                                <input type="radio" name="design_type" value="원클릭AI설계(종합보험)" checked>
+                                <span class="radio-label">원클릭AI설계 (종합보험)</span>
+                            </label>
+                            <label class="radio-option" id="custom-ai-option">
+                                <input type="radio" name="design_type" value="맞춤 AI설계" id="custom-ai-radio">
+                                <span class="radio-label">맞춤 AI설계</span>
+                            </label>
+                        </div>
                         <button id="run-ai-btn" class="btn btn-ai pulse-glow mt-auto">
                             <span class="material-symbols-outlined">magic_button</span> AI 설계 요청
                         </button>
@@ -173,35 +175,37 @@
                         <h3>AI 인수 요청하기</h3>
                     </div>
                     <div class="card-body flex-col">
-                        <label class="radio-option">
-                            <input type="radio" name="import_type" value="내 설계 불러오기" checked>
-                            <span class="radio-label">내 설계 불러오기 (마이플랜)</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="import_type" value="추천설계 불러오기">
-                            <span class="radio-label">추천설계 불러오기 (지역/사업부)</span>
-                        </label>
+                        <div class="ai-import-options">
+                            <label class="radio-option">
+                                <input type="radio" name="import_type" value="내 설계 불러오기" checked>
+                                <span class="radio-label">내 설계 불러오기 (마이플랜)</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="import_type" value="추천설계 불러오기">
+                                <span class="radio-label">추천설계 불러오기 (지역/사업부)</span>
+                            </label>
+                        </div>
                         <button id="btn-import-plan" class="btn btn-secondary mt-auto">진행</button>
                     </div>
                 </div>
-            </div>
 
-            <!-- Detailed Progress Stepper -->
-            <div class="stepper-container card">
-                <div class="stepper-flex">
-                    <div class="step-label-box">진행단계</div>
-                    <div class="steps-wrapper">
-                        <div class="step-box active highlight" id="step-1">설계요청</div>
-                        <div class="step-dash"></div>
-                        <div class="step-box" id="step-2">설계 중</div>
-                        <div class="step-dash"></div>
-                        <div class="step-box" id="step-3">AI심사중</div>
-                        <div class="step-dash"></div>
-                        <div class="step-box" id="step-4">플랜비교</div>
-                        <div class="step-dash"></div>
-                        <div class="step-box" id="step-5">누적점검</div>
-                        <div class="step-dash"></div>
-                        <div class="step-box" id="step-6">설계 완료</div>
+                <!-- Detailed Progress Stepper -->
+                <div class="stepper-container card">
+                    <div class="stepper-flex">
+                        <div class="step-label-box">진행단계</div>
+                        <div class="steps-wrapper">
+                            <div class="step-box active highlight" id="step-1">설계요청</div>
+                            <div class="step-dash"></div>
+                            <div class="step-box" id="step-2">설계 중</div>
+                            <div class="step-dash"></div>
+                            <div class="step-box" id="step-3">AI심사중</div>
+                            <div class="step-dash"></div>
+                            <div class="step-box" id="step-4">플랜비교</div>
+                            <div class="step-dash"></div>
+                            <div class="step-box" id="step-5">누적점검</div>
+                            <div class="step-dash"></div>
+                            <div class="step-box" id="step-6">설계 완료</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -934,6 +938,10 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mp-footer" style="padding: 12px 15px; border-top: 1px solid #ddd; display: flex; justify-content: flex-end; gap: 10px; background: #f9f9f9;">
+                <button id="btn-import-ai-request" class="btn-filter-action orange" style="height: 32px; padding: 0 20px;">AI 설계요청</button>
+                <button class="btn-filter-action" style="height: 32px; padding: 0 20px;" onclick="hideMyPlanModal()">닫기</button>
+            </div>
         </div>
     </div>
 
@@ -1010,6 +1018,10 @@
                         <!-- Populated by JS -->
                     </tbody>
                 </table>
+            </div>
+            <div class="mp-footer" style="padding: 12px 15px; border-top: 1px solid #ddd; display: flex; justify-content: flex-end; gap: 10px; background: #f9f9f9;">
+                <button id="btn-recommended-ai-request" class="btn-filter-action orange" style="height: 32px; padding: 0 20px;">AI 설계요청</button>
+                <button class="btn-filter-action" style="height: 32px; padding: 0 20px;" onclick="hideRecommendedPlanModal()">닫기</button>
             </div>
         </div>
     </div>
