@@ -177,6 +177,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-cumulative-sim').addEventListener('click', showSimModal);
     document.getElementById('btn-underwriting-view').addEventListener('click', showAuditModal);
     document.getElementById('btn-compare-plans').addEventListener('click', showCompareModal);
+    document.getElementById('btn-memo').addEventListener('click', showMemoModal);
+
+    // Memo textarea character counter
+    const memoTextEl = document.getElementById('memo-text');
+    if (memoTextEl) {
+        memoTextEl.addEventListener('input', () => {
+            document.getElementById('memo-char-current').textContent = memoTextEl.value.length;
+        });
+    }
 });
 
 function showScreen(screenNum) {
@@ -334,6 +343,10 @@ function populateCustomer(customer) {
         infoHtml += `<br><span style="color: #d32f2f; font-weight: 600;">실손보험 가입 이력 : ${silsonHistory[1].replace("실손보험 가입", "") || "-"} (4세대)</span>`;
     }
 
+    if (!isPreliminary) {
+        infoHtml += `<div style="margin-top: 15px;"><button class="btn btn-outline" style="width: 100%; border-color: #3b82f6; color: #3b82f6; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600;" onclick="showPrintModal()"><span class="material-symbols-outlined" style="font-size: 18px;">print</span>출력하기</button></div>`;
+    }
+
     custInfoText.innerHTML = infoHtml;
     
     // Summary
@@ -395,9 +408,9 @@ function runAiDesign() {
         const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
         
         const newPlans = [
-            ["AI", "고객 개인화 추천", currentCustomer.plans.length + 1, currentCustomer.name, generatePlanId(), "표준 2Q PASS", dateStr, "80,160", "20.8", "할증, 부담보", ""],
-            ["AI", "베테랑 설계 따라하기", currentCustomer.plans.length + 2, currentCustomer.name, generatePlanId(), "퍼펙트 종합(10년고지)", dateStr, "166,900", "14.5", "정상", ""],
-            ["AI", "우리 지점 트렌드", currentCustomer.plans.length + 3, currentCustomer.name, generatePlanId(), "내삶엔 3.9.9.9", dateStr, "151,950", "19.7", "누적조정", ""]
+            [currentCustomer.plans.length + 1, "고객 개인화 추천", "AI", currentCustomer.name, generatePlanId(), "표준 2Q PASS", dateStr, "80,160", "20.8", "할증, 부담보", ""],
+            [currentCustomer.plans.length + 2, "베테랑 설계 따라하기", "AI", currentCustomer.name, generatePlanId(), "퍼펙트 종합(10년고지)", dateStr, "166,900", "14.5", "정상", ""],
+            [currentCustomer.plans.length + 3, "우리 지점 트렌드", "AI", currentCustomer.name, generatePlanId(), "내삶엔 3.9.9.9", dateStr, "151,950", "19.7", "누적조정", ""]
         ];
 
         currentCustomer.plans.push(...newPlans);
@@ -474,6 +487,13 @@ function renderPlans(plans) {
                 else if (item.includes('조정')) color = '#fd7e14';
                 else if (item.includes('가심사')) color = '#9b59b6';
                 html += `<td><span style="color: ${color}; font-weight: 600;">${item}</span></td>`;
+            } else if (pIdx === 10) {
+                // 메모 컬럼
+                if (item && item.trim()) {
+                    html += `<td><span class="memo-badge" title="${item}" onclick="event.stopPropagation(); openMemoForPlan(${idx})">${item}</span></td>`;
+                } else {
+                    html += `<td></td>`;
+                }
             } else if (pIdx === 1) {
                 html += `<td><a class="plan-link" onclick='event.stopPropagation(); showPlanDetail(${JSON.stringify(plan).replace(/'/g, "&#39;")})'>${item}</a></td>`;
             } else {
@@ -543,9 +563,9 @@ function submitCustomDesign() {
     else if (selectedPremium === '15만원초과') premiums = ["168,900", "185,200", "201,700"];
     
     const newPlans = [
-        ["AI", "고객 개인화 추천", currentCustomer.plans.length + 1, custName, generatePlanId(), productName, dateStr, premiums[0], "17.5", "정상", ""],
-        ["AI", "베테랑 설계 따라하기", currentCustomer.plans.length + 2, custName, generatePlanId(), productName, dateStr, premiums[1], "15.2", "정상", ""],
-        ["AI", "우리 지점 트렌드", currentCustomer.plans.length + 3, custName, generatePlanId(), productName, dateStr, premiums[2], "13.8", "정상", ""]
+        [currentCustomer.plans.length + 1, "고객 개인화 추천", "AI", custName, generatePlanId(), productName, dateStr, premiums[0], "17.5", "정상", ""],
+        [currentCustomer.plans.length + 2, "베테랑 설계 따라하기", "AI", custName, generatePlanId(), productName, dateStr, premiums[1], "15.2", "정상", ""],
+        [currentCustomer.plans.length + 3, "우리 지점 트렌드", "AI", custName, generatePlanId(), productName, dateStr, premiums[2], "13.8", "정상", ""]
     ];
     
     currentCustomer.plans.push(...newPlans);
@@ -998,7 +1018,7 @@ function handleImportAiRequest() {
     const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
     
     // Create new plan based on selection
-    const newPlan = ["AI", "내 설계 불러오기", currentCustomer.plans.length + 1, currentCustomer.name, generatePlanId(), item.prod, dateStr, item.premium, "100", "정상", ""];
+    const newPlan = [currentCustomer.plans.length + 1, "내 설계 불러오기", "AI", currentCustomer.name, generatePlanId(), item.prod, dateStr, item.premium, "100", "정상", ""];
     
     currentCustomer.plans.push(newPlan);
     
@@ -1063,7 +1083,7 @@ function handleRecommendedAiRequest() {
     const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
     
     // Create new plan based on selection
-    const newPlan = ["AI", "추천설계 불러오기", currentCustomer.plans.length + 1, currentCustomer.name, generatePlanId(), item.prod, dateStr, item.premium, "100", "정상", ""];
+    const newPlan = [currentCustomer.plans.length + 1, "추천설계 불러오기", "AI", currentCustomer.name, generatePlanId(), item.prod, dateStr, item.premium, "100", "정상", ""];
     
     currentCustomer.plans.push(newPlan);
     
@@ -1202,3 +1222,59 @@ function hideConsentModal() {
     document.getElementById('consent-modal').classList.remove('show');
 }
 
+function showPrintModal() {
+    document.getElementById('print-modal').classList.add('show');
+}
+
+function hidePrintModal() {
+    document.getElementById('print-modal').classList.remove('show');
+}
+
+// ===== Memo Feature =====
+let memoTargetPlanIndex = null;
+
+function showMemoModal() {
+    if (!window.selectedPlanIndices || window.selectedPlanIndices.length === 0) {
+        showAlert("안내", "먼저 목록에서 설계를 선택해주세요.");
+        return;
+    }
+    if (window.selectedPlanIndices.length > 1) {
+        showAlert("안내", "메모는 한 건씩 작성할 수 있습니다. 하나만 선택해주세요.");
+        return;
+    }
+    openMemoForPlan(window.selectedPlanIndices[0]);
+}
+
+function openMemoForPlan(planIdx) {
+    if (!currentCustomer || !currentCustomer.plans || !currentCustomer.plans[planIdx]) return;
+    
+    memoTargetPlanIndex = planIdx;
+    const plan = currentCustomer.plans[planIdx];
+    
+    document.getElementById('memo-plan-id').textContent = plan[4];
+    document.getElementById('memo-product-name').textContent = plan[5];
+    document.getElementById('memo-reason').textContent = plan[1];
+    
+    const textarea = document.getElementById('memo-text');
+    textarea.value = plan[10] || '';
+    document.getElementById('memo-char-current').textContent = textarea.value.length;
+    
+    document.getElementById('memo-modal').classList.add('show');
+    setTimeout(() => textarea.focus(), 100);
+}
+
+function hideMemoModal() {
+    document.getElementById('memo-modal').classList.remove('show');
+    memoTargetPlanIndex = null;
+}
+
+function saveMemo() {
+    if (memoTargetPlanIndex === null || !currentCustomer || !currentCustomer.plans[memoTargetPlanIndex]) return;
+    
+    const memoText = document.getElementById('memo-text').value.trim();
+    currentCustomer.plans[memoTargetPlanIndex][10] = memoText;
+    
+    renderPlans(currentCustomer.plans);
+    hideMemoModal();
+    showAlert("저장 완료", "메모가 저장되었습니다.");
+}
