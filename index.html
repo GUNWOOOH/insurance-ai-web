@@ -69,8 +69,8 @@
                     </div>
 
                     <div class="action-buttons">
-                        <button class="btn btn-secondary">신규고객입력</button>
-                        <button class="btn btn-secondary">가입설계동의</button>
+                        <button id="btn-new-customer" class="btn btn-secondary" onclick="showNewCustomerModal()">신규고객입력</button>
+                        <button id="btn-consent" class="btn btn-secondary" onclick="showConsentModal()">가입설계동의</button>
                         <button id="search-btn-main" class="btn btn-primary pulse">
                             <span class="material-symbols-outlined">person_search</span>
                             조회하기
@@ -1111,32 +1111,41 @@
                 <!-- Left Sidebar: Options -->
                 <div class="ai-result-left">
                     <div id="plan-option-1" class="plan-result-card active" onclick="switchResultTab(1)">
-                        <div class="plan-card-header">I. 고객 맞춤 (유사고객)</div>
+                        <div class="plan-card-header">
+                            I. 고객 맞춤 (유사고객)
+                            <button class="btn-more" onclick="event.stopPropagation(); showPlanDetailByTab(1)">+</button>
+                        </div>
                         <div class="plan-card-body">
                             <p class="p-name">간편한3.10.10건강보험(세만기형)</p>
                             <p class="p-meta">설계번호 : L026 08701817</p>
                             <p class="p-meta">30년납 / 30년만기 / 연만기 / 해약환급금미지급형</p>
-                            <p class="p-analysis">기왕력 분석 결과 : 질병유사도 95% / 주요질병 : XX, XX</p>
+                            <p class="p-analysis" onclick="event.stopPropagation(); showPlanDetailByTab(1)">기왕력 분석 결과 : 질병유사도 95% / 주요질병 : XX, XX</p>
                             <div class="p-total">[ 합계보험료 ] 150,000 원</div>
                         </div>
                     </div>
                     <div id="plan-option-2" class="plan-result-card" onclick="switchResultTab(2)">
-                        <div class="plan-card-header">II. 우수설계 따라하기</div>
+                        <div class="plan-card-header">
+                            II. 우수설계 따라하기
+                            <button class="btn-more" onclick="event.stopPropagation(); showPlanDetailByTab(2)">+</button>
+                        </div>
                         <div class="plan-card-body">
                             <p class="p-name">내삶엔(3N)맞춤건강보험(세만기형)</p>
                             <p class="p-meta">설계번호 : L026 10815948</p>
                             <p class="p-meta">30년납 / 30년만기 / 연만기 / 해약환급금미지급형</p>
-                            <p class="p-analysis">설계성향 분석 결과 : 설계유사도 88% / 주요담보 : XX, XX</p>
+                            <p class="p-analysis" onclick="event.stopPropagation(); showPlanDetailByTab(2)">설계성향 분석 결과 : 설계유사도 88% / 주요담보 : XX, XX</p>
                             <div class="p-total">[ 합계보험료 ] 100,000 원</div>
                         </div>
                     </div>
                     <div id="plan-option-3" class="plan-result-card" onclick="switchResultTab(3)">
-                        <div class="plan-card-header">III. 최신트렌드</div>
+                        <div class="plan-card-header">
+                            III. 최신트렌드
+                            <button class="btn-more" onclick="event.stopPropagation(); showPlanDetailByTab(3)">+</button>
+                        </div>
                         <div class="plan-card-body">
                             <p class="p-name">내삶엔(3N)맞춤건강보험(세만기형)</p>
                             <p class="p-meta">설계번호 : L026 11250053</p>
                             <p class="p-meta">30년납 / 30년만기 / 연만기 / 해약환급금미지급형</p>
-                            <p class="p-analysis">설계성향 분석 결과 : 설계유사도 92% / 주요담보 : XX, XX</p>
+                            <p class="p-analysis" onclick="event.stopPropagation(); showPlanDetailByTab(3)">설계성향 분석 결과 : 설계유사도 92% / 주요담보 : XX, XX</p>
                             <div class="p-total">[ 합계보험료 ] 70,000 원</div>
                         </div>
                     </div>
@@ -1175,10 +1184,194 @@
             </div>
 
             <div class="ai-result-footer">
-                <button class="btn btn-primary" style="background: #233b69;">플랜 비교하기</button>
-                <button class="btn btn-primary" style="background: #f58220;">누적시뮬레이션</button>
-                <button class="btn btn-primary" style="background: #f58220;">인수심사보기</button>
+                <button class="btn btn-primary" style="background: #233b69;" onclick="showCompareModal()">플랜 비교하기</button>
+                <button class="btn btn-primary" style="background: #f58220;" onclick="showSimModal()">누적시뮬레이션</button>
+                <button class="btn btn-primary" style="background: #f58220;" onclick="showAuditModal()">인수심사보기</button>
                 <button id="ai-result-close-btn" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 신규고객입력 팝업 -->
+    <div id="new-customer-modal" class="modal">
+        <div class="modal-content nc-popup">
+            <div class="nc-header">
+                <h2>고객정보 등록/수정</h2>
+                <button class="nc-close-x" onclick="hideNewCustomerModal()">&times;</button>
+            </div>
+            
+            <div class="nc-body">
+                <!-- 상단 검색바 -->
+                <div class="nc-search-row">
+                    <div class="nc-label">고객검색</div>
+                    <select class="nc-select w-100"><option>주민번호</option></select>
+                    <input type="text" class="nc-input w-200" placeholder="주민번호">
+                    <button class="nc-btn-action">신분증 진위확인</button>
+                    <button class="nc-btn-search">조회</button>
+                </div>
+
+                <!-- 기본 정보 그리드 -->
+                <div class="nc-form-grid">
+                    <div class="nc-field"><label>국적</label><div class="nc-input-with-btn"><input type="text" value="대한민국"><button>🔍</button></div></div>
+                    <div class="nc-field"><label>구분</label><select><option>주민등록번호</option></select></div>
+                    <div class="nc-field"><label>고객명</label><input type="text"></div>
+                    <div class="nc-field"><label>만</label><input type="text" class="w-40" value="33"><span>세</span></div>
+                    <div class="nc-field"><label>영문명</label><input type="text"></div>
+                    <div class="nc-field"><label>생년월일</label><input type="text" value="1991-01-01"></div>
+                </div>
+
+                <!-- 주소 및 연락처 섹션 -->
+                <div class="nc-two-column">
+                    <div class="nc-col">
+                        <div class="nc-section-title">주소</div>
+                        <table class="nc-data-table">
+                            <thead><tr><th>구분</th><th>주소</th></tr></thead>
+                            <tbody>
+                                <tr><td>자택</td><td><div class="nc-addr-box"><input type="text" class="w-60" value="우"><input type="text" class="w-full"></div></td></tr>
+                                <tr><td>직장</td><td><div class="nc-addr-box"><input type="text" class="w-60" value="우"><input type="text" class="w-full"></div></td></tr>
+                                <tr><td>기타</td><td><div class="nc-addr-box"><input type="text" class="w-60" value="우"><input type="text" class="w-full"></div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="nc-col">
+                        <div class="nc-section-title">연락처</div>
+                        <table class="nc-data-table">
+                            <thead><tr><th>구분</th><th>연락처</th><th>통신사</th></tr></thead>
+                            <tbody>
+                                <tr><td>휴대폰1</td><td><select class="w-60"><option>선택</option></select><input type="text" class="w-60"><input type="text" class="w-60"></td><td><select class="w-60"><option>선택</option></select></td></tr>
+                                <tr><td>자택</td><td><select class="w-60"><option>선택</option></select><input type="text" class="w-60"><input type="text" class="w-60"></td><td></td></tr>
+                                <tr><td>이메일</td><td colspan="2"><input type="text" class="w-100"> @ <input type="text" class="w-80"> <select class="w-80"><option>선택</option></select></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 동의 및 추가정보 섹션 -->
+                <div class="nc-two-column mt-15">
+                    <div class="nc-col">
+                        <div class="nc-section-title">개인(신용)정보처리동의</div>
+                        <table class="nc-data-table nc-condensed">
+                            <tr><td width="80">상품소개</td><td>동의일자 <input type="text" class="w-80"></td><td>만료일자 <input type="text" class="w-80"></td></tr>
+                            <tr><td>수신거부</td><td colspan="2" class="nc-check-group"><input type="checkbox"> 전화 <input type="checkbox"> 문자 <input type="checkbox"> 이메일 <input type="checkbox"> 우편</td></tr>
+                            <tr><td>가입설계</td><td>동의일자 <input type="text" class="w-80"></td><td>만료일자 <input type="text" class="w-80"></td></tr>
+                        </table>
+                    </div>
+                    <div class="nc-col">
+                        <div class="nc-section-title">추가정보</div>
+                        <div class="nc-add-info">
+                            <div class="nc-field"><label>직업</label><div class="nc-input-with-btn"><input type="text"><button>🔍</button></div><input type="text" class="w-40" value="1"><span class="ml-5">급</span></div>
+                            <div class="nc-field mt-10"><label>취득경로</label><select class="w-150"><option>선택</option></select></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 기타 메모 -->
+                <div class="nc-memo-section mt-15">
+                    <div class="nc-section-title">기타메모</div>
+                    <textarea class="nc-textarea" placeholder="기타메모는 입력자 본인만 볼 수 있는 메모로, 전사 메모공유는 상단 '고객응대/메모등록'에 입력해야 합니다."></textarea>
+                </div>
+            </div>
+
+            <div class="nc-footer">
+                <div class="nc-footer-left">
+                    <button class="nc-btn-outline">우편물수령지변경</button>
+                    <button class="nc-btn-outline">고객통합조회</button>
+                </div>
+                <div class="nc-footer-right">
+                    <button class="nc-btn-gray">초기화</button>
+                    <button class="nc-btn-orange">저장</button>
+                    <button class="nc-btn-dark" onclick="hideNewCustomerModal()">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 가입설계동의 팝업 (셀프등록 버전) -->
+    <div id="consent-modal" class="modal">
+        <div class="modal-content sc-popup">
+            <div class="sc-header">
+                <div class="sc-tabs">
+                    <div class="sc-tab active">셀프등록</div>
+                    <div class="sc-tab">휴대폰인증</div>
+                    <div class="sc-tab">인터넷동의</div>
+                    <div class="sc-tab">동의서발행</div>
+                </div>
+                <button class="sc-close-x" onclick="hideConsentModal()">&times;</button>
+            </div>
+            
+            <div class="sc-body">
+                <div class="sc-title">
+                    ▶ 셀프등록 <span class="sc-highlight">※ 고객이 주소등록까지 완료해야 고객정보 자동등록</span>
+                </div>
+
+                <table class="sc-form-table">
+                    <tr>
+                        <th width="120">계약담당자</th>
+                        <td>
+                            <div class="sc-input-group">
+                                <input type="text" value="1A3085" class="w-80">
+                                <button class="sc-icon-btn">🔍</button>
+                                <input type="text" value="이먼치" class="w-100">
+                                <input type="text" value="대전TC지점" class="w-150">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>선택</th>
+                        <td>
+                            <label class="sc-radio"><input type="radio" name="sc-send"> 담당에게 보내기(URL 전달용)</label>
+                            <label class="sc-radio ml-20"><input type="radio" name="sc-send" checked> 고객에게 보내기(1명 전달용)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>휴대폰번호</th>
+                        <td><input type="text" class="nc-input w-200"></td>
+                    </tr>
+                    <tr>
+                        <th>주민번호</th>
+                        <td>
+                            <div class="sc-input-group">
+                                <input type="text" value="741120-2845611" class="nc-input w-150">
+                                <input type="text" class="nc-input w-100">
+                                <span class="ml-10">51 세</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="sc-notice-box">
+                    <div class="sc-notice-title">① 유의사항</div>
+                    <ul class="sc-notice-list">
+                        <li>본인 명의 휴대폰만 업무처리 가능합니다. (타명의, 미성년자, 외국인 처리 불가)
+                            <br><span class="sc-red">※ 내국인&본인명의 외 고객은 기존 방식(휴대폰인증, 동의서발행 등)으로 처리하시기 바랍니다.</span>
+                        </li>
+                        <li class="sc-orange-text">담당에게 보내기(URL전달용)</li>
+                        <li class="sc-gray-text">- 계약담당으로 설정된 사번의 인사정보상 등록된 연락처로 URL 발송
+                            <br>해당 URL을 다수의 타인에게 전달하여 현대해상의 가입설계동의 및 고객정보 등록처리가 가능합니다.
+                            <br><span class="sc-red">※ 해당 URL은 카카오앱 특성상 따른 문제로 아이폰만 카카오인증 가능합니다(안드로이드 불가)</span>
+                        </li>
+                        <li class="sc-orange-text">고객에게 보내기(1명 전달용)</li>
+                        <li class="sc-gray-text">- 기존 프로세스와 동일하게 한명 특정 고객에게만 발송되는 URL입니다.</li>
+                        <li class="sc-red">※ 발송 전 고객에게 충분한 사전안내 후 업무 진행 하시기 바랍니다.
+                            <br>개인정보처리 관련 민원 발생시 관련 법령에 따라 처벌 및 제재 가능 (개인정보보호법 및 신용정보법)
+                        </li>
+                        <li class="sc-gray-text">- 고객 본인이 직접 가입설계동의 및 정보를 등록할 수 있는 URL을 보내는 화면입니다.</li>
+                        <li class="sc-gray-text">- <span class="sc-orange-text">"셀프등록요청"</span> 버튼 클릭시 입력한 휴대폰번호로 URL이 발송됩니다.</li>
+                        <li class="sc-gray-text">- 카카오 회원이 아닐 경우 문자로 대체 발송되며, 등록 완료시 계약담당자에게 알림(PUSH) 발송됩니다.</li>
+                    </ul>
+                    <div class="sc-step-info">
+                        업무처리 순서<br>
+                        휴대폰본인인증 > 가입설계동의 체크 > 주소등록 (모든 단계가 끝나야 정상 동의 및 정보 등록완료)
+                    </div>
+                </div>
+            </div>
+
+            <div class="sc-footer">
+                <button class="nc-btn-outline">휴대폰 인증내역</button>
+                <div class="sc-footer-right">
+                    <button class="nc-btn-orange">셀프등록요청</button>
+                    <button class="nc-btn-gray" onclick="hideConsentModal()">닫기</button>
+                </div>
             </div>
         </div>
     </div>

@@ -716,16 +716,15 @@ h1, h2, h3 { font-weight: 700; }
 .steps-wrapper {
     display: flex;
     align-items: center;
-    flex: 1;
 }
 
 .step-box {
     background: #e9ecef;
     color: #333;
-    padding: 10px 25px;
+    padding: 8px 15px;
     font-weight: 600;
-    font-size: 14px;
-    border-radius: 0;
+    font-size: 13px;
+    border-radius: 4px;
     transition: all 0.3s;
     white-space: nowrap;
 }
@@ -741,11 +740,11 @@ h1, h2, h3 { font-weight: 700; }
 }
 
 .step-dash {
-    flex: 1;
-    height: 6px;
+    width: 20px;
+    height: 4px;
     background-image: linear-gradient(to right, #f58220 50%, transparent 50%);
-    background-size: 10px 100%;
-    margin: 0 -2px;
+    background-size: 8px 100%;
+    flex-shrink: 0;
 }
 
 .step-divider {
@@ -861,6 +860,18 @@ h1, h2, h3 { font-weight: 700; }
 .modal.show {
     display: flex;
     opacity: 1;
+}
+
+#plan-detail-modal {
+    z-index: 1200; /* Higher than result modal */
+}
+
+#ai-result-modal {
+    z-index: 1100;
+}
+
+#compare-modal, #sim-modal, #audit-modal {
+    z-index: 1300; /* Higher than detail modal */
 }
 
 .modal-content {
@@ -2295,12 +2306,45 @@ h1, h2, h3 { font-weight: 700; }
     font-weight: 700;
     font-size: 14px;
     border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .plan-result-card.active .plan-card-header {
     background: #f58220;
     color: white;
     border-bottom-color: #f58220;
+}
+
+.btn-more {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid #999;
+    background: white;
+    color: #666;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1;
+    padding: 0;
+}
+
+.plan-result-card.active .btn-more {
+    border-color: white;
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.btn-more:hover {
+    background: white !important;
+    color: #f58220 !important;
+    transform: scale(1.1);
 }
 
 .plan-card-body {
@@ -2326,6 +2370,13 @@ h1, h2, h3 { font-weight: 700; }
     padding: 4px 8px;
     border-radius: 4px;
     margin-top: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.plan-card-body .p-analysis:hover {
+    background: #dce4f0;
+    text-decoration: underline;
 }
 
 .plan-card-body .p-total {
@@ -2433,3 +2484,467 @@ h1, h2, h3 { font-weight: 700; }
     background: #f8f9fa;
 }
 
+
+/* New Customer Registration Modal */
+.nc-popup {
+    width: 1000px;
+    max-width: 95vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    background: #f4f7f9;
+}
+
+.nc-header {
+    background: white;
+    padding: 12px 20px;
+    border-bottom: 2px solid #f58220;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nc-header h2 {
+    font-size: 18px;
+    color: #333;
+    font-weight: 700;
+}
+
+.nc-close-x {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+}
+
+.nc-body {
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.nc-search-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.nc-label {
+    font-weight: 700;
+    color: #f58220;
+    font-size: 14px;
+    padding-right: 10px;
+}
+
+.nc-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    background: white;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.nc-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nc-field label {
+    width: 80px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+}
+
+.nc-input-with-btn {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.nc-input-with-btn input {
+    border: none;
+    padding: 4px 8px;
+    width: 120px;
+    outline: none;
+}
+
+.nc-input-with-btn button {
+    background: #f8f9fa;
+    border: none;
+    border-left: 1px solid #ddd;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.nc-two-column {
+    display: flex;
+    gap: 20px;
+}
+
+.nc-col {
+    flex: 1;
+}
+
+.nc-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f58220;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.nc-section-title::before {
+    content: '▶';
+    font-size: 10px;
+    margin-right: 5px;
+}
+
+.nc-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid #ddd;
+}
+
+.nc-data-table th, .nc-data-table td {
+    border: 1px solid #ddd;
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.nc-data-table th {
+    background: #f8f9fa;
+    color: #666;
+    font-weight: 600;
+}
+
+.nc-addr-box {
+    display: flex;
+    gap: 5px;
+}
+
+.nc-check-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.nc-memo-section {
+    background: white;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.nc-textarea {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #eee;
+    padding: 10px;
+    font-size: 13px;
+    resize: none;
+    margin-top: 10px;
+    outline: none;
+}
+
+.nc-footer {
+    background: white;
+    padding: 15px 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nc-footer-right {
+    display: flex;
+    gap: 8px;
+}
+
+.nc-btn-action {
+    padding: 4px 12px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.nc-btn-search {
+    padding: 4px 15px;
+    background: #f58220;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.nc-btn-orange {
+    padding: 8px 24px;
+    background: #f58220;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.nc-btn-gray {
+    padding: 8px 24px;
+    background: #f8f9fa;
+    color: #666;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.nc-btn-dark {
+    padding: 8px 24px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.nc-btn-outline {
+    padding: 6px 12px;
+    border: 1px solid #233b69;
+    color: #233b69;
+    background: white;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Utilities */
+.w-40 { width: 40px !important; }
+.w-60 { width: 60px !important; }
+.w-80 { width: 80px !important; }
+.w-100 { width: 100px !important; }
+.w-150 { width: 150px !important; }
+.w-200 { width: 200px !important; }
+.w-full { width: 100%; }
+.mt-10 { margin-top: 10px; }
+.mt-15 { margin-top: 15px; }
+.ml-5 { margin-left: 5px; }
+
+.nc-popup input[type="text"], .nc-popup select {
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 12px;
+    outline: none;
+}
+
+/* Self-Registration Modal (sc-) */
+.sc-popup {
+    width: 1000px;
+    max-width: 95vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.sc-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.sc-tabs {
+    display: flex;
+}
+
+.sc-tab {
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    border-right: 1px solid #ddd;
+    background: #f1f3f5;
+}
+
+.sc-tab.active {
+    background: white;
+    color: #333;
+    border-bottom: 2px solid white;
+    margin-bottom: -1px;
+}
+
+.sc-close-x {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+}
+
+.sc-body {
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.sc-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f58220;
+    margin-bottom: 15px;
+}
+
+.sc-highlight {
+    font-size: 13px;
+    font-weight: normal;
+    color: #f58220;
+    margin-left: 10px;
+}
+
+.sc-form-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid #f58220;
+    margin-bottom: 20px;
+}
+
+.sc-form-table th, .sc-form-table td {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    text-align: left;
+}
+
+.sc-form-table th {
+    background: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+}
+
+.sc-input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.sc-input-group input {
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    outline: none;
+}
+
+.sc-icon-btn {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 2px 8px;
+    cursor: pointer;
+}
+
+.sc-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.sc-notice-box {
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+}
+
+.sc-notice-title {
+    font-weight: 700;
+    color: #f58220;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.sc-notice-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sc-notice-list li {
+    font-size: 12.5px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.sc-red { color: #d9534f; font-weight: 600; }
+.sc-orange-text { color: #f58220; font-weight: 700; margin-top: 5px; display: block; }
+.sc-gray-text { color: #888; padding-left: 10px; }
+
+.sc-step-info {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #f8f9fa;
+    border-left: 4px solid #ddd;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.sc-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    background: white;
+}
+
+.sc-footer-right {
+    display: flex;
+    gap: 8px;
+}
+
+.sc-btn-orange {
+    padding: 8px 20px;
+    background: #f58220;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.sc-btn-gray {
+    padding: 8px 20px;
+    background: white;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ml-20 { margin-left: 20px; }

@@ -430,9 +430,9 @@ function renderPlans(plans) {
                 else if (item.includes('가심사')) color = '#9b59b6';
                 html += `<td><span style="color: ${color}; font-weight: 600;">${item}</span></td>`;
             } else if (idx === 1) {
-                html += `<td><span style="background: #eef2f7; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; color: #233b69; white-space: nowrap;">${item}</span></td>`;
-            } else if (idx === 4) {
                 html += `<td><a class="plan-link" onclick='showPlanDetail(${JSON.stringify(plan).replace(/'/g, "&#39;")})'>${item}</a></td>`;
+            } else if (idx === 4) {
+                html += `<td>${item}</td>`;
             } else {
                 html += `<td>${item}</td>`;
             }
@@ -630,8 +630,16 @@ function hidePlanDetailModal() {
 }
 
 function showAuditModal() {
-    // Populate dynamic audit text from the plan detail modal's current value
-    const auditText = document.getElementById('pd-audit-result').textContent;
+    // Try to get audit text from either detail modal or result modal
+    const pdAudit = document.getElementById('pd-audit-result');
+    let auditText = pdAudit ? pdAudit.textContent : "정상";
+    
+    // If opening from result modal, we might want to use its specific data
+    const resultModal = document.getElementById('ai-result-modal');
+    if (resultModal && resultModal.classList.contains('show') && !document.getElementById('plan-detail-modal').classList.contains('show')) {
+        // Mock: currently 4-1 always shows a default audit for demo
+        auditText = "부담보"; 
+    }
     
     if (auditText.trim() !== "정상") {
         document.getElementById('audit-dynamic-result').innerHTML = "직장(2년)<br>대장(맹장, 직장 제외)(2년)<br>상, 하악골(위턱뼈-아래턱뼈)(2년)";
@@ -647,9 +655,22 @@ function hideAuditModal() {
 }
 
 function showSimModal() {
-    // Populate dynamic values from the plan detail modal or current customer
-    const planId = document.getElementById('pd-plan-id').textContent;
-    const productName = document.getElementById('pd-product-name').textContent;
+    // Determine which modal is currently providing the plan info
+    let planId, productName;
+    const detailModal = document.getElementById('plan-detail-modal');
+    const resultModal = document.getElementById('ai-result-modal');
+
+    if (detailModal && detailModal.classList.contains('show')) {
+        planId = document.getElementById('pd-plan-id').textContent;
+        productName = document.getElementById('pd-product-name').textContent;
+    } else if (resultModal && resultModal.classList.contains('show')) {
+        planId = document.getElementById('detail-plan-id').textContent;
+        productName = document.getElementById('detail-prod-name-span').textContent;
+    } else {
+        planId = "L026 00000000";
+        productName = "상품정보 없음";
+    }
+
     const custName = currentCustomer ? currentCustomer.name : '고객명';
 
     document.getElementById('sim-cust-name').value = custName;
@@ -657,7 +678,7 @@ function showSimModal() {
     document.getElementById('sim-product-name').textContent = productName;
     
     document.querySelectorAll('.sim-plan-id-display').forEach(el => {
-        el.textContent = planId.substring(0, 10) + '...';
+        el.textContent = planId.substring(0, 10) + (planId.length > 10 ? '...' : '');
     });
 
     document.getElementById('sim-modal').classList.add('show');
@@ -988,4 +1009,26 @@ function switchResultTab(tabNum) {
         `;
         tbody.appendChild(tr);
     });
+}
+
+function showPlanDetailByTab(tabNum) {
+    if (currentCustomer && currentCustomer.plans && currentCustomer.plans[tabNum - 1]) {
+        showPlanDetail(currentCustomer.plans[tabNum - 1]);
+    }
+}
+
+function showNewCustomerModal() {
+    document.getElementById('new-customer-modal').classList.add('show');
+}
+
+function hideNewCustomerModal() {
+    document.getElementById('new-customer-modal').classList.remove('show');
+}
+
+function showConsentModal() {
+    document.getElementById('consent-modal').classList.add('show');
+}
+
+function hideConsentModal() {
+    document.getElementById('consent-modal').classList.remove('show');
 }
