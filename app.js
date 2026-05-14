@@ -289,10 +289,9 @@ function applyPreliminaryMode(isPrelim) {
     const oneClickRadio = document.querySelector('input[value="원클릭AI설계(종합보험)"]');
     
     if (isPrelim) {
-        // 맞춤 AI설계 비활성화
-        customRadio.disabled = true;
-        customRadio.checked = false;
-        customOption.classList.add('disabled');
+        // 맞춤 AI설계 활성화 (가설계 모드에서도 가능하도록 변경)
+        customRadio.disabled = false;
+        customOption.classList.remove('disabled');
         oneClickRadio.checked = true;
         
         // 스크린 타이틀 변경
